@@ -10,7 +10,7 @@
 
 
 
-ALLEGRO_BITMAP* fTile[6];
+ALLEGRO_BITMAP* fTile[10];
 const int height = 960;
 const int width = 1120;
 
@@ -20,13 +20,6 @@ FILE* mapa;
 
 int maps[];
 
-int grama = 0;
-int terra = 1;
-int arvore1 = 2;
-int arvore2 = 3;
-int arvore3 = 4;
-int arvore4 = 5;
-
 
 void readTile()
 {
@@ -35,7 +28,7 @@ void readTile()
 	{
 		for (int j = 0; j < colunas; j++)
 		{
-			for (int k = 0; k < 6 ; k++)
+			for (int k = 0; k < 10 ; k++)
 			{
 				if (c[i][j] == k)
 				{
@@ -63,6 +56,10 @@ int mapaf()
 	fTile[3] = al_load_bitmap("Tiles/tree2.bmp");
 	fTile[4] = al_load_bitmap("Tiles/tree3.bmp");
 	fTile[5] = al_load_bitmap("Tiles/tree4.bmp");
+	fTile[6] = al_load_bitmap("Tiles/water1.bmp");
+	fTile[7] = al_load_bitmap("Tiles/water2.bmp");
+	fTile[8] = al_load_bitmap("Tiles/water3.bmp");
+	fTile[9] = al_load_bitmap("Tiles/water4.bmp");
 
 
 
