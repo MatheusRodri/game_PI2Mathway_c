@@ -9,7 +9,8 @@
 #include "Mapa.h"
 
 
-ALLEGRO_BITMAP* fTile[3];
+
+ALLEGRO_BITMAP* fTile[6];
 const int height = 960;
 const int width = 1120;
 
@@ -21,8 +22,10 @@ int maps[];
 
 int grama = 0;
 int terra = 1;
-int arvore = 2;
-
+int arvore1 = 2;
+int arvore2 = 3;
+int arvore3 = 4;
+int arvore4 = 5;
 
 
 void readTile()
@@ -32,21 +35,13 @@ void readTile()
 	{
 		for (int j = 0; j < colunas; j++)
 		{
-			for (int k = 0; k < 2; k++)
+			for (int k = 0; k < 6 ; k++)
 			{
-				if (c[i][j] == grama)
+				if (c[i][j] == k)
 				{
-					al_draw_bitmap(fTile[grama], j * 32, i * 32, 0);
+					al_draw_bitmap(fTile[k], j * 32, i * 32, 0);
 				}
-				else if (c[i][j] == terra)
-				{
-					al_draw_bitmap(fTile[terra], j * 32, i * 32, 0);
-				}
-				else if (c[i][j] == arvore)
-				{
-					al_draw_bitmap(fTile[arvore], j * 32, i * 32, 0);
-					//al_clear_to_color(#39FF14);
-				}
+			
 			}
 		}
 	}
@@ -58,13 +53,18 @@ int mapaf()
 
 	al_init();
 	al_init_image_addon();
-	al_init_font_addon();
+	
 	ALLEGRO_FONT* font = al_create_builtin_font();
 
 	display = al_create_display(width, height);
 	fTile[0] = al_load_bitmap("Tiles/grass.bmp");
 	fTile[1] = al_load_bitmap("Tiles/dirty.bmp");
-	fTile[2] = al_load_bitmap("Tiles/trees.bmp");
+	fTile[2] = al_load_bitmap("Tiles/tree1.bmp");
+	fTile[3] = al_load_bitmap("Tiles/tree2.bmp");
+	fTile[4] = al_load_bitmap("Tiles/tree3.bmp");
+	fTile[5] = al_load_bitmap("Tiles/tree4.bmp");
+
+
 
 	mapa = fopen("Mapa/mapa.txt", "r");
 	fscanf(mapa, "%i", &linhas);
