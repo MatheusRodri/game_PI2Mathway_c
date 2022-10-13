@@ -63,6 +63,7 @@ int mapaf()
 
 
 
+
 	mapa = fopen("Mapa/mapa.txt", "r");
 	fscanf(mapa, "%i", &linhas);
 	fscanf(mapa, "%i", &colunas);
