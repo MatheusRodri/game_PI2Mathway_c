@@ -18,8 +18,22 @@
     <ClCompile Include="Main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Ataque.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vida.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Ataque.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vida.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
