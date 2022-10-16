@@ -2,15 +2,12 @@
 #include <stdio.h>
 
 
-
-
-
-void ataque(int nivel,int n1,int n2) {
+int ataque(int nivel,int n1,int n2) {
 	int resultado;
 	int valorUser;
 	switch (nivel){
 	case 1:
-		printf("Informe o resultado do seguinte codigo %i + %i ", n1, n2);
+		printf("Informe o resultado do seguinte codigo %i + %i  ", n1, n2);
 		scanf_s("%i", &valorUser);
 		resultado = n1 + n2;
 		
