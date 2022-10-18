@@ -5,7 +5,7 @@
 void movi() {
 	//variaveis globais 
 	bool running = true,draw=true,ativo=false;
-	enum direcao{CIMA,BAIXO,ESQUERDA,DIREITA};
+	enum direcao{CIMA,DIREITA,BAIXO,ESQUERDA};
 	float x = 320, y = 240;
 	float movSpeed = 5;
 	float dir=BAIXO;
@@ -19,8 +19,8 @@ void movi() {
 	//criação dos ponteiros utilizados para criar o display, a fila de evento e o bitmap(img)
 	ALLEGRO_DISPLAY* display = NULL;
 	ALLEGRO_EVENT_QUEUE* queue = NULL;
-	ALLEGRO_BITMAP* bitmap ;
-	ALLEGRO_TIMER* timer = al_create_timer(1.0/60);
+	ALLEGRO_BITMAP* bitmap;
+	ALLEGRO_TIMER* timer;
 	
 
 		
@@ -40,13 +40,16 @@ void movi() {
 	
 	
 	al_init_image_addon();
-	bitmap = al_load_bitmap("movimento.png");
+	bitmap = al_load_bitmap("hosmi.png");
 	
 	
 	
 	
 	int width = al_get_display_width(display);
 	
+	
+
+	timer = al_create_timer(1.0/30);
 	al_register_event_source(queue, al_get_timer_event_source(timer));
 	al_start_timer(timer);
 	while (running) {
@@ -77,18 +80,18 @@ void movi() {
 			 else { ativo = false; }
 
 			if (ativo)
-				sourceX += al_get_bitmap_width(bitmap) / 4;
+				sourceX += al_get_bitmap_width(bitmap) / 3;
 			else
 				sourceX = 0;
 			 if (sourceX >= al_get_bitmap_width(bitmap))
-				 sourceX = 64;
+				 sourceX = 90;
 			 sourceY = dir;
 			 draw =true;
 		 }
 
 		if (draw) {
 			al_clear_to_color(al_map_rgba_f(0, 0, 0, 1));
-			al_draw_bitmap_region(bitmap,sourceX,sourceY*al_get_bitmap_height(bitmap)/4,64,64,x,y,NULL);
+			al_draw_bitmap_region(bitmap,sourceX, sourceY* al_get_bitmap_height(bitmap) / 4, 90,126, x, y, NULL);
 			al_flip_display();
 		}
 
