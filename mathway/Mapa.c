@@ -2,7 +2,7 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
 #include <stdlib.h>
-#define _CRT_SECURE_NO_DEPRECATE  
+#define _CRT_SECURE_NO_DEPRECATE 
 #define _CRT_NONSTDC_NO_DEPRECATE
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
@@ -10,12 +10,12 @@
 
 
 
-ALLEGRO_BITMAP* fTile[10];
+ALLEGRO_BITMAP* fTile[100];
 const int height = 960;
-const int width = 1120;
+const int width = 1280;
 
 int linhas, colunas;
-int c[30][35];
+int c[30][40];
 FILE* mapa;
 
 int maps[];
@@ -28,7 +28,7 @@ void readTile()
 	{
 		for (int j = 0; j < colunas; j++)
 		{
-			for (int k = 0; k < 10 ; k++)
+			for (int k = 0; k < 30 ; k++)
 			{
 				if (c[i][j] == k)
 				{
@@ -60,6 +60,17 @@ int mapaf()
 	fTile[7] = al_load_bitmap("Tiles/water2.bmp");
 	fTile[8] = al_load_bitmap("Tiles/water3.bmp");
 	fTile[9] = al_load_bitmap("Tiles/water4.bmp");
+	fTile[10] = al_load_bitmap("Tiles/P1.bmp");
+	fTile[11] = al_load_bitmap("Tiles/P2.bmp");
+	fTile[12] = al_load_bitmap("Tiles/P3.bmp");
+	fTile[13] = al_load_bitmap("Tiles/P4.bmp");
+	fTile[14] = al_load_bitmap("Tiles/P6.bmp");
+	fTile[15] = al_load_bitmap("Tiles/P7.bmp");
+	fTile[16] = al_load_bitmap("Tiles/P10.bmp");
+	fTile[17] = al_load_bitmap("Tiles/P11.bmp");
+	fTile[18] = al_load_bitmap("Tiles/WaterL.bmp");
+	fTile[19] = al_load_bitmap("Tiles/WaterR.bmp");
+
 
 
 
