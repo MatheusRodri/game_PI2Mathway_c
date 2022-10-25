@@ -1,6 +1,6 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include "Mapa.h"
 
 int main() {
+	mapaf();
 	return 0;
 }

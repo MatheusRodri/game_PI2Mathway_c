@@ -115,11 +115,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -147,6 +147,10 @@
   <ItemGroup>
     <ClInclude Include="headerGenSprite.h" />
     <ClInclude Include="headerMovi.h" />
+    <ClCompile Include="Mapa.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Mapa.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
