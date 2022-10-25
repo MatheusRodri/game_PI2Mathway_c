@@ -71,6 +71,8 @@ int mapaf()
 	fTile[18] = al_load_bitmap("Tiles/WaterL.bmp");
 	fTile[19] = al_load_bitmap("Tiles/WaterR.bmp");
 
+	fTile[10] = al_load_bitmap("Tiles/dirtyup.bmp");
+	fTile[11] = al_load_bitmap("Tiles/dirtyDo.bmp");
 
 
 
