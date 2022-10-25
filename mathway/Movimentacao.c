@@ -27,7 +27,7 @@ void movi() {
 	//inicia o allegro, var display e var queue(fila)
 	al_init();
 
-	display = al_create_display(900, 600);
+	//display = al_create_display(900, 600);
 	queue = al_create_event_queue();
 
 
@@ -40,7 +40,7 @@ void movi() {
 	
 	
 	al_init_image_addon();
-	bitmap = al_load_bitmap("hosmi.png");
+	bitmap = al_load_bitmap("sprites/hosmi.png");
 	
 	
 	
