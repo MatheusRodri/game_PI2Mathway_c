@@ -10,7 +10,7 @@
 
 
 
-ALLEGRO_BITMAP* fTile[10];
+ALLEGRO_BITMAP* fTile[12];
 const int height = 960;
 const int width = 1120;
 
@@ -28,7 +28,7 @@ void readTile()
 	{
 		for (int j = 0; j < colunas; j++)
 		{
-			for (int k = 0; k < 10 ; k++)
+			for (int k = 0; k < 12 ; k++)
 			{
 				if (c[i][j] == k)
 				{
@@ -60,6 +60,8 @@ int mapaf()
 	fTile[7] = al_load_bitmap("Tiles/water2.bmp");
 	fTile[8] = al_load_bitmap("Tiles/water3.bmp");
 	fTile[9] = al_load_bitmap("Tiles/water4.bmp");
+	fTile[10] = al_load_bitmap("Tiles/dirtyup.bmp");
+	fTile[11] = al_load_bitmap("Tiles/dirtyDo.bmp");
 
 
 
