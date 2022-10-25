@@ -1,7 +1,6 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include "Mapa.h"
 
 int main() {
-	printf("Hello word");
+	mapaf();
 	return 0;
 }
