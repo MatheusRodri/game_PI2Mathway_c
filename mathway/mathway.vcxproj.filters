@@ -18,11 +18,19 @@
     <ClCompile Include="Main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Movimentacao.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gerarSprites.c">
     <ClCompile Include="Mapa.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="headerMovi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headerGenSprite.h">
     <ClInclude Include="Mapa.h">
       <Filter>Header Files</Filter>
     </ClInclude>
