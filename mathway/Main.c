@@ -114,7 +114,7 @@ int main() {
 		while (!al_is_event_queue_empty(fila_eventos)) {
 			ALLEGRO_EVENT evento;
 			al_wait_for_event(fila_eventos, &evento);
-
+			al_get_keyboard_state(&keyState);
 			if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 				jogando = 0;
 			}
@@ -152,10 +152,7 @@ int main() {
 			}
 		}
 		readTile();
-		if (draw) {
-			al_draw_bitmap_region(bitmap, sourceX, sourceY * al_get_bitmap_height(bitmap) / 4, 90, 126, x, y, NULL);
-			al_flip_display();
-		}
+		al_draw_bitmap_region(bitmap, sourceX, sourceY* al_get_bitmap_height(bitmap) / 4, 90, 126, x, y, NULL);
 		al_flip_display();	
 	}
 	al_destroy_display(janela);
