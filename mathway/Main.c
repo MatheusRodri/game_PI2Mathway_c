@@ -8,7 +8,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 
-
 ALLEGRO_BITMAP* fTile[100];
 int linhas, colunas;
 int c[30][40];
@@ -37,14 +36,27 @@ void readTile() {
 int main() {
 	ALLEGRO_DISPLAY* janela = NULL;
 	ALLEGRO_EVENT_QUEUE* fila_eventos = NULL;
+	ALLEGRO_BITMAP* bitmap;
+	ALLEGRO_TIMER* timer;
+	ALLEGRO_KEYBOARD_STATE keyState;
 
 	al_init();
 	al_init_image_addon();
 	al_install_keyboard();
-	
+	al_init_image_addon();
 
 	janela = al_create_display(1280, 960);
-	fila_eventos = al_crate_event_queue();
+	fila_eventos = al_create_event_queue();
+	al_register_event_source(fila_eventos, al_get_keyboard_event_source());
+	al_register_event_source(fila_eventos, al_get_display_event_source(janela));
+	bitmap = al_load_bitmap("sprites/hosmi.png");
+
+	int width = al_get_display_width(janela);
+
+	timer = al_create_timer(1.0 / 30);
+	al_register_event_source(fila_eventos, al_get_timer_event_source(timer));
+	al_start_timer(timer);
+
 
 	ALLEGRO_FONT* font = al_create_builtin_font();
 
@@ -69,15 +81,23 @@ int main() {
 	fTile[18] = al_load_bitmap("Tiles/WaterL.bmp");
 	fTile[19] = al_load_bitmap("Tiles/WaterR.bmp");
 
-	
-	
+	fTile[10] = al_load_bitmap("Tiles/dirtyup.bmp");
+	fTile[11] = al_load_bitmap("Tiles/dirtyDo.bmp");
 
 
-
+	bool jogando = true;
+	bool running = true, draw = true, ativo = false;
+	enum direcao { CIMA, DIREITA, BAIXO, ESQUERDA };
+	float x = 320, y = 240;
+	float movSpeed = 5;
+	float dir = BAIXO;
+	float sourceX = 0;
+	float sourceY = 0;
 
 	mapa = fopen("Mapa/mapa.txt", "r");
 	fscanf(mapa, "%i", &linhas);
 	fscanf(mapa, "%i", &colunas);
+
 	for (int i = 0; i < linhas; i++)
 	{
 		for (int j = 0; j < colunas; j++)
@@ -85,10 +105,9 @@ int main() {
 			fscanf(mapa, "%i, %i", &c[i][j]);
 		}
 	}
-	readTile();
+	
 
-
-	bool jogando = true;
+	
 	
 	while (jogando)
 	{
@@ -99,10 +118,52 @@ int main() {
 			if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 				jogando = 0;
 			}
+			if (evento.type == ALLEGRO_EVENT_TIMER) {
+				ativo = true;
+				if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)) {
+					y += movSpeed;
+					dir = BAIXO;
+				}
+				else if (al_key_down(&keyState, ALLEGRO_KEY_UP)) {
+					y -= movSpeed;
+					dir = CIMA;
+				}
+				else if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT)) {
+					x += movSpeed;
+					dir = DIREITA;
+				}
+				else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT)) {
+					x -= movSpeed;
+					dir = ESQUERDA;
+				}
+				else if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
+					running = false;
+				}
+				else { ativo = false; }
+
+				if (ativo)
+					sourceX += al_get_bitmap_width(bitmap) / 3;
+				else
+					sourceX = 0;
+				if (sourceX >= al_get_bitmap_width(bitmap))
+					sourceX = 90;
+				sourceY = dir;
+				draw = true;
+			}
 		}
-
-
+		readTile();
+		if (draw) {
+			al_draw_bitmap_region(bitmap, sourceX, sourceY * al_get_bitmap_height(bitmap) / 4, 90, 126, x, y, NULL);
+			al_flip_display();
+		}
 		al_flip_display();	
 	}
+	al_destroy_display(janela);
+	al_uninstall_keyboard();
+	al_uninstall_mouse();
+	al_destroy_bitmap(bitmap);
+
+	al_destroy_event_queue(fila_eventos);
+
 	return 0;
 }
