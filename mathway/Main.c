@@ -10,7 +10,7 @@
 
 ALLEGRO_BITMAP* fTile[100];
 int linhas, colunas;
-int c[30][40];
+int c[30][45];
 FILE* mapa;
 
 int maps[];
@@ -45,7 +45,7 @@ int main() {
 	al_install_keyboard();
 	al_init_image_addon();
 
-	janela = al_create_display(1280, 960);
+	janela = al_create_display(1440, 960);
 	fila_eventos = al_create_event_queue();
 	al_register_event_source(fila_eventos, al_get_keyboard_event_source());
 	al_register_event_source(fila_eventos, al_get_display_event_source(janela));
@@ -80,9 +80,8 @@ int main() {
 	fTile[17] = al_load_bitmap("Tiles/P11.bmp");
 	fTile[18] = al_load_bitmap("Tiles/WaterL.bmp");
 	fTile[19] = al_load_bitmap("Tiles/WaterR.bmp");
-
-	fTile[10] = al_load_bitmap("Tiles/dirtyup.bmp");
-	fTile[11] = al_load_bitmap("Tiles/dirtyDo.bmp");
+	fTile[20] = al_load_bitmap("Tiles/dirtyup.bmp");
+	fTile[21] = al_load_bitmap("Tiles/dirtyDo.bmp");
 
 
 	bool jogando = true;
