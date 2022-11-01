@@ -82,6 +82,8 @@ int main() {
 	fTile[19] = al_load_bitmap("Tiles/WaterR.bmp");
 	fTile[20] = al_load_bitmap("Tiles/dirtyup.bmp");
 	fTile[21] = al_load_bitmap("Tiles/dirtyDo.bmp");
+	fTile[22] = al_load_bitmap("Tiles/ArvoreE.bmp");
+	fTile[23] = al_load_bitmap("Tiles/ArvoreD.bmp");
 
 
 	bool jogando = true;
@@ -119,24 +121,28 @@ int main() {
 			}
 			if (evento.type == ALLEGRO_EVENT_TIMER) {
 				ativo = true;
-				if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)) {
-					y += movSpeed;
-					dir = BAIXO;
+				
+				if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)&& y < 850 ) {
+
+						y += movSpeed;
+						dir = BAIXO;
 				}
-				else if (al_key_down(&keyState, ALLEGRO_KEY_UP)) {
+				else if (al_key_down(&keyState, ALLEGRO_KEY_UP)&& y > 0 ) {
 					y -= movSpeed;
 					dir = CIMA;
 				}
-				else if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT)) {
+			
+				else if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT) && x < 1370) {
 					x += movSpeed;
 					dir = DIREITA;
 				}
-				else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT)) {
+				else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT) && x > 0) {
 					x -= movSpeed;
 					dir = ESQUERDA;
 				}
+			
 				else if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
-					running = false;
+					jogando = false;
 				}
 				else { ativo = false; }
 
