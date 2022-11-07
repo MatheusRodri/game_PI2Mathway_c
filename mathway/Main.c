@@ -15,6 +15,8 @@ FILE* mapa;
 
 int maps[];
 
+
+
 void readTile() {
 
 	for (int i = 0; i < linhas; i++)
@@ -26,12 +28,45 @@ void readTile() {
 				if (c[i][j] == k)
 				{
 					al_draw_bitmap(fTile[k], j * 32, i * 32, 0);
+
+
 				}
 
 			}
 		}
 	}
 }
+
+
+void gameOver() {
+
+	ALLEGRO_DISPLAY* gmOv = NULL;
+
+	ALLEGRO_BITMAP* fundo = NULL;
+
+
+	al_init();
+
+
+	al_init_image_addon();
+
+
+	gmOv = al_create_display(1440, 960);
+	fundo = al_load_bitmap("Tiles/game.png");
+
+	al_draw_bitmap(fundo, 0, 0, 0);
+
+	al_flip_display();
+
+
+
+
+
+
+
+}
+
+
 
 int main() {
 	ALLEGRO_DISPLAY* janela = NULL;
@@ -106,10 +141,10 @@ int main() {
 			fscanf(mapa, "%i, %i", &c[i][j]);
 		}
 	}
-	
 
-	
-	
+
+
+
 	while (jogando)
 	{
 		while (!al_is_event_queue_empty(fila_eventos)) {
@@ -119,32 +154,225 @@ int main() {
 			if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 				jogando = 0;
 			}
+
+
+
+
+
+
+
+
+
+
 			if (evento.type == ALLEGRO_EVENT_TIMER) {
 				ativo = true;
-				
-				if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)&& y < 850 ) {
+
+
+
+
+				if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)/* && y < 850*/) {
+					//bool and = true;
+
+
+					//for (int i = 0; i < linhas; i++)
+					//{
+					//	for (int j = 0; j < colunas; j++)
+					//	{
+					//		int lug = j * 32;
+					//		if (lug == y && c[i][j] != 0) {
+					//			and = false;
+					//		}
+					//	}
+					//}
+					//while (and == true) {
+
+					int yy = (int)y;
+					int resto = yy % 32;
+					float pos = y / 32;
+					int i = 0;
+					int coisa;
+
+					int xx = (int)x;
+					int resto1 = xx % 32;
+					float pos1 = x / 32;
+					int j = 0;
+					int coisa1;
+
+					if (resto == 0) {
+
+						i = (int)pos;
+					}
+					else if (resto > 0) {
+						coisa = (int)pos;
+						i = coisa + 1;
+					}
+
+
+					if (resto1 == 0) {
+
+						j = pos1;
+					}
+					else if (resto1 > 0) {
+						coisa1 = pos1;
+						j = 1 + coisa1;
+					}
+
+					if (c[i + 2][j + 1] == 0 || x < 32)
+					{
 
 						y += movSpeed;
 						dir = BAIXO;
+					}
+
+
+
+
+
 				}
-				else if (al_key_down(&keyState, ALLEGRO_KEY_UP)&& y > 0 ) {
-					y -= movSpeed;
-					dir = CIMA;
+				else if (al_key_down(&keyState, ALLEGRO_KEY_UP) && y > 0) {
+
+					int yy = (int)y;
+					int resto = yy % 32;
+					float pos = y / 32;
+					int i = 0;
+					int coisa;
+
+					int xx = (int)x;
+					int resto1 = xx % 32;
+					float pos1 = x / 32;
+					int j = 0;
+					int coisa1;
+
+					if (resto == 0) {
+
+						i = (int)pos;
+					}
+					else if (resto > 0) {
+						coisa = (int)pos;
+						i = coisa + 1;
+					}
+
+
+					if (resto1 == 0) {
+
+						j = pos1;
+					}
+					else if (resto1 > 0) {
+						coisa1 = pos1;
+						j = 1 + coisa1;
+					}
+
+					if (c[i][j] == 0 || x < 32)
+					{
+						y -= movSpeed;
+						dir = CIMA;
+
+					}
+
 				}
-			
-				else if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT) && x < 1370) {
-					x += movSpeed;
-					dir = DIREITA;
+				else if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT)) {
+					int j = 0;
+
+					int yy = (int)y;
+					int resto = yy % 32;
+					float pos = y / 32;
+					int i = 0;
+					int coisa;
+
+					int xx = (int)x;
+					int resto1 = xx % 32;
+					float pos1 = x / 32;
+
+
+
+					int coisa1;
+
+					if (resto == 0) {
+
+						i = (int)pos;
+					}
+					else if (resto > 0) {
+						coisa = (int)pos;
+						i = coisa + 1;
+					}
+
+
+					if (resto1 == 0) {
+
+						j = pos1;
+					}
+					else if (resto1 > 0) {
+						coisa1 = pos1;
+						j = 1 + coisa1;
+					}
+
+					if ((c[i + 1][j + 1] == 0 && x < 1370) || x < 32)
+					{
+
+						x += movSpeed;
+						dir = DIREITA;
+					}
+
+
+
 				}
-				else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT) && x > 0) {
-					x -= movSpeed;
-					dir = ESQUERDA;
+				else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT)) {
+
+
+					int yy = (int)y;
+					int resto = yy % 32;
+					float pos = y / 32;
+					int j = 0;
+					int coisa;
+
+					int xx = (int)x;
+					int resto1 = xx % 32;
+					float pos1 = x / 32;
+					int i = 0;
+					int coisa1;
+
+					if (resto == 0) {
+
+						i = (int)pos;
+					}
+					else if (resto > 0) {
+						coisa = (int)pos;
+						i = coisa + 1;
+					}
+
+
+					if (resto1 == 0) {
+
+						j = pos1;
+					}
+					else if (resto1 > 0) {
+						coisa1 = pos1;
+						j = 1 + coisa1;
+					}
+
+					if (c[i + 1][j] == 0 && x > 0)
+					{
+						x -= movSpeed;
+						dir = ESQUERDA;
+					}
+
 				}
-			
+
+
+
 				else if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
-					jogando = false;
+					gameOver();
+					al_destroy_display(janela);
+					al_destroy_bitmap(bitmap);
+
+
 				}
 				else { ativo = false; }
+
+
+
+
+
 
 				if (ativo)
 					sourceX += al_get_bitmap_width(bitmap) / 3;
@@ -157,8 +385,8 @@ int main() {
 			}
 		}
 		readTile();
-		al_draw_bitmap_region(bitmap, sourceX, sourceY* al_get_bitmap_height(bitmap) / 4, 90, 126, x, y, NULL);
-		al_flip_display();	
+		al_draw_bitmap_region(bitmap, sourceX, sourceY * al_get_bitmap_height(bitmap) / 4, 90, 126, x, y, NULL);
+		al_flip_display();
 	}
 	al_destroy_display(janela);
 	al_uninstall_keyboard();
