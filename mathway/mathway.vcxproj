@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="colisao.c" />
     <ClCompile Include="Main.c" />
     <ClCompile Include="Movimentacao.c" />
     <ClCompile Include="gerarSprites.c" />
