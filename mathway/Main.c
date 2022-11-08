@@ -6,6 +6,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_ttf.h>
+
 #define _CRT_SECURE_NO_DEPRECATE 
 #define _CRT_NONSTDC_NO_DEPRECATE
 #define _CRT_SECURE_NO_WARNINGS
@@ -71,6 +72,8 @@ int main() {
 	
 	al_install_keyboard();
 	al_init_image_addon();
+	al_init_ttf_addon();
+	al_init_primitives_addon();
 
 	janela = al_create_display(larg, altu);
 	fila_eventos = al_create_event_queue();
@@ -122,7 +125,7 @@ int main() {
 	player.boundX = player.w / 10;
 	player.boundY = player.h / 10;
 
-	//inimigo
+	//inimigo 1
 	persona inimigo;
 	inimigo.x = larg / 2;
 	inimigo.y = altu / 2;
@@ -134,12 +137,28 @@ int main() {
 	inimigo.boundX = inimigo.w / 2;
 	inimigo.boundY = inimigo.h / 2;
 
+	//inimigo 2
+
+	persona inimigo1;
+	
+	inimigo1.x = 1000;
+	inimigo1.y = 600;
+	inimigo1.perImage = al_load_bitmap("sprites/inimigo.jpg");
+
+	inimigo1.w = al_get_bitmap_width(inimigo1.perImage);
+	inimigo1.h = al_get_bitmap_height(inimigo1.perImage);
+
+	inimigo1.boundX = inimigo1.w / 2;
+	inimigo1.boundY = inimigo1.h / 2;
+	
+	///////////////////////////////////
+	//alguns bool para identificar colisao
 
 	bool colisao = false;
 	bool bound = false;
 	bool render = false;
 
-
+	
 	bool jogando = true;
 	bool running = true, draw = true, ativo = false;
 	
@@ -211,6 +230,15 @@ int main() {
 					player.y + 64>inimigo.y - inimigo.boundY &&
 					player.y < inimigo.y + inimigo.boundY) {
 					colisao = true;
+					
+					bound = true;
+					ativo = false;
+				}
+				else if (player.x + 64 > inimigo1.x - inimigo1.boundX &&
+					player.x<inimigo1.x + inimigo1.boundX &&
+					player.y + 64>inimigo1.y - inimigo1.boundY &&
+					player.y < inimigo1.y + inimigo1.boundY) {
+					
 					bound = true;
 					ativo = false;
 				}
@@ -235,10 +263,12 @@ int main() {
 			render = false;
 			//desenho
 			al_draw_bitmap_region(player.perImage, sourceX, sourceY* al_get_bitmap_height(player.perImage) / 4, 64, 64, player.x, player.y, NULL);
-			al_draw_bitmap(inimigo.perImage, inimigo.x, inimigo.y, 0);
+			al_draw_bitmap(inimigo.perImage, inimigo.x-inimigo.boundX, inimigo.y-inimigo.boundY, 0);
+			al_draw_bitmap(inimigo1.perImage, inimigo1.x - inimigo1.boundX, inimigo1.y - inimigo1.boundY, 0);
 			if (bound) {
 				al_draw_filled_rectangle(player.x, player.y, player.x + 64, player.y + 64, al_map_rgba_f(.6, 0, .6, .6));
 				al_draw_filled_rectangle(inimigo.x - inimigo.boundX, inimigo.y - inimigo.boundY, inimigo.x + inimigo.boundX, inimigo.y + inimigo.boundY, al_map_rgba_f(.6, 0, .6, .6));
+				al_draw_filled_rectangle(inimigo1.x - inimigo1.boundX, inimigo1.y - inimigo1.boundY, inimigo1.x + inimigo1.boundX, inimigo1.y + inimigo1.boundY, al_map_rgba_f(.6, 0, .6, .6));
 			}
 			if (colisao) {
 				ativo = false;
