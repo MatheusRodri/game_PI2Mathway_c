@@ -3,10 +3,16 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_native_dialog.h>
+#include <allegro5/allegro_ttf.h>
 #define _CRT_SECURE_NO_DEPRECATE 
 #define _CRT_NONSTDC_NO_DEPRECATE
 #define _CRT_SECURE_NO_WARNINGS
 
+
+const int larg = 1440;
+const int altu = 960;
 
 ALLEGRO_BITMAP* fTile[100];
 int linhas, colunas;
@@ -14,6 +20,28 @@ int c[30][45];
 FILE* mapa;
 
 int maps[];
+//nova movimentação
+
+enum direcao { BAIXO, ESQUERDA, DIREITA, CIMA };
+
+//struct para inserir personagens na tela
+typedef struct personagens persona;
+struct personagens {
+	float x;
+	float y;
+	float velX;
+	float velY;
+	float dirX;
+	float dirY;
+	//proporções
+	int boundX;
+	int boundY;
+	int w;
+	int h;
+
+	ALLEGRO_BITMAP* perImage;
+};
+
 
 void readTile() {
 
@@ -36,26 +64,22 @@ void readTile() {
 int main() {
 	ALLEGRO_DISPLAY* janela = NULL;
 	ALLEGRO_EVENT_QUEUE* fila_eventos = NULL;
-	ALLEGRO_BITMAP* bitmap;
 	ALLEGRO_TIMER* timer;
 	ALLEGRO_KEYBOARD_STATE keyState;
 
 	al_init();
-	al_init_image_addon();
+	
 	al_install_keyboard();
 	al_init_image_addon();
 
-	janela = al_create_display(1440, 960);
+	janela = al_create_display(larg, altu);
 	fila_eventos = al_create_event_queue();
 	al_register_event_source(fila_eventos, al_get_keyboard_event_source());
 	al_register_event_source(fila_eventos, al_get_display_event_source(janela));
-	bitmap = al_load_bitmap("sprites/hosmi.png");
+	 
 
 	int width = al_get_display_width(janela);
 
-	timer = al_create_timer(1.0 / 30);
-	al_register_event_source(fila_eventos, al_get_timer_event_source(timer));
-	al_start_timer(timer);
 
 
 	ALLEGRO_FONT* font = al_create_builtin_font();
@@ -86,10 +110,39 @@ int main() {
 	fTile[23] = al_load_bitmap("Tiles/ArvoreD.bmp");
 
 
+	//iniciando personagens 
+	persona player;
+	player.x = 320;
+	player.y = 240;
+	player.perImage= al_load_bitmap("sprites/personagem.png");
+
+	player.w = al_get_bitmap_width(player.perImage);
+	player.h = al_get_bitmap_height(player.perImage);
+
+	player.boundX = player.w / 10;
+	player.boundY = player.h / 10;
+
+	//inimigo
+	persona inimigo;
+	inimigo.x = larg / 2;
+	inimigo.y = altu / 2;
+	inimigo.perImage = al_load_bitmap("sprites/inimigo.jpg");
+
+	inimigo.w = al_get_bitmap_width(inimigo.perImage);
+	inimigo.h = al_get_bitmap_height(inimigo.perImage);
+
+	inimigo.boundX = inimigo.w / 2;
+	inimigo.boundY = inimigo.h / 2;
+
+
+	bool colisao = false;
+	bool bound = false;
+	bool render = false;
+
+
 	bool jogando = true;
 	bool running = true, draw = true, ativo = false;
-	enum direcao { CIMA, DIREITA, BAIXO, ESQUERDA };
-	float x = 320, y = 240;
+	
 	float movSpeed = 5;
 	float dir = BAIXO;
 	float sourceX = 0;
@@ -108,6 +161,10 @@ int main() {
 	}
 	
 
+	timer = al_create_timer(1.0 / 60.0);
+	al_register_event_source(fila_eventos, al_get_timer_event_source(timer));
+	al_start_timer(timer);
+	
 	
 	
 	while (jogando)
@@ -121,49 +178,81 @@ int main() {
 			}
 			if (evento.type == ALLEGRO_EVENT_TIMER) {
 				ativo = true;
-				
-				if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)&& y < 850 ) {
+				render = true;
+				bound = false;
+				if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)&& player.y < 850 ) {
 
-						y += movSpeed;
+						player.y += movSpeed;
 						dir = BAIXO;
 				}
-				else if (al_key_down(&keyState, ALLEGRO_KEY_UP)&& y > 0 ) {
-					y -= movSpeed;
+				else if (al_key_down(&keyState, ALLEGRO_KEY_UP)&& player.y > 0 ) {
+					player.y -= movSpeed;
 					dir = CIMA;
 				}
 			
-				else if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT) && x < 1370) {
-					x += movSpeed;
+				else if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT) && player.x < 1370) {
+					player.x += movSpeed;
 					dir = DIREITA;
 				}
-				else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT) && x > 0) {
-					x -= movSpeed;
+				else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT) && player.x > 0) {
+					player.x -= movSpeed;
 					dir = ESQUERDA;
+					
 				}
 			
 				else if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
 					jogando = false;
+					
 				}
 				else { ativo = false; }
 
+				if (player.x + 64 > inimigo.x - inimigo.boundX &&
+					player.x<inimigo.x + inimigo.boundX &&
+					player.y + 64>inimigo.y - inimigo.boundY &&
+					player.y < inimigo.y + inimigo.boundY) {
+					colisao = true;
+					bound = true;
+					ativo = false;
+				}
+				else
+					bound = false;
+					colisao = false;
+
+
+
 				if (ativo)
-					sourceX += al_get_bitmap_width(bitmap) / 3;
+					sourceX += al_get_bitmap_width(player.perImage) / 4.0;
 				else
 					sourceX = 0;
-				if (sourceX >= al_get_bitmap_width(bitmap))
-					sourceX = 90;
+				if (sourceX >= al_get_bitmap_width(player.perImage))
+					sourceX = 0;
 				sourceY = dir;
 				draw = true;
 			}
 		}
 		readTile();
-		al_draw_bitmap_region(bitmap, sourceX, sourceY* al_get_bitmap_height(bitmap) / 4, 90, 126, x, y, NULL);
-		al_flip_display();	
+		if (render && al_is_event_queue_empty(fila_eventos)) {
+			render = false;
+			//desenho
+			al_draw_bitmap_region(player.perImage, sourceX, sourceY* al_get_bitmap_height(player.perImage) / 4, 64, 64, player.x, player.y, NULL);
+			al_draw_bitmap(inimigo.perImage, inimigo.x, inimigo.y, 0);
+			if (bound) {
+				al_draw_filled_rectangle(player.x, player.y, player.x + 64, player.y + 64, al_map_rgba_f(.6, 0, .6, .6));
+				al_draw_filled_rectangle(inimigo.x - inimigo.boundX, inimigo.y - inimigo.boundY, inimigo.x + inimigo.boundX, inimigo.y + inimigo.boundY, al_map_rgba_f(.6, 0, .6, .6));
+			}
+			if (colisao) {
+				ativo = false;
+				
+			}
+			
+			al_flip_display();
+		}
+			
 	}
 	al_destroy_display(janela);
 	al_uninstall_keyboard();
 	al_uninstall_mouse();
-	al_destroy_bitmap(bitmap);
+	al_destroy_bitmap(player.perImage);
 
 	al_destroy_event_queue(fila_eventos);
 

@@ -32,7 +32,7 @@ struct sprite
     ALLEGRO_BITMAP* image;
 };
 
-int main(int argc, char** argv)
+int qualquercoisa(int argc, char** argv)
 {
 
 
