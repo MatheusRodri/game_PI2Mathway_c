@@ -8,7 +8,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_ttf.h>
-#include "Mapa.h"
+#include "Logica.h"
 
 #define _CRT_SECURE_NO_DEPRECATE 
 #define _CRT_NONSTDC_NO_DEPRECATE
@@ -36,7 +36,6 @@ enum direcao { BAIXO, ESQUERDA, DIREITA, CIMA };
 void gameOver() {
 
 	ALLEGRO_DISPLAY* gmOv = NULL;
-
 	ALLEGRO_BITMAP* fundo = NULL;
 
 	al_init();
@@ -100,7 +99,6 @@ int main() {
 	ALLEGRO_EVENT_QUEUE* fila_eventos = NULL;
 	ALLEGRO_TIMER* timer;
 	ALLEGRO_KEYBOARD_STATE keyState;
-	ALLEGRO_BITMAP* bitmap;
 
 	al_init();
 
@@ -115,7 +113,7 @@ int main() {
     int pos_x = 720;
 	int pos_y = 800;
 
-
+	ALLEGRO_FONT* fonte = al_load_font("Fonts/ariblk.ttf", 50, NULL);
 	janela = al_create_display(larg, altu);
 	fila_eventos = al_create_event_queue();
 	al_register_event_source(fila_eventos, al_get_keyboard_event_source());
@@ -153,6 +151,8 @@ int main() {
 	fTile[22] = al_load_bitmap("Tiles/ArvoreE.bmp");
 	fTile[23] = al_load_bitmap("Tiles/ArvoreD.bmp");
 
+	int teste = 10;
+	char buffer[sizeof(int) * 8 + 1];
 
 	//iniciando personagens 
 	persona player;
@@ -306,12 +306,17 @@ int main() {
 					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					int i;
 					sscanf(answr,"%d",&i);
-					if (i != 14) {
-						gameOver();
-						al_destroy_display(janela);
-						//al_destroy_bitmap(bitmap);
-
+					int resultado = logica(1,1,1,7,7,i);
+					if (resultado == 0) {
+						break;
 					}
+					else {
+						teste = teste + resultado;
+					}
+					if (teste <= 0) {
+						gameOver();
+					}
+
 					break;
 				case ALLEGRO_KEY_BACKSPACE:
 					answr[strlen(answr) - 1] = '\0';
@@ -320,56 +325,47 @@ int main() {
 					al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
 					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					pos_x += 3;
-
 					break;
 				case ALLEGRO_KEY_1:
 					strcat_s(answr, 8, "1");
-					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
+					
 					pos_x += 3;
 					break;
 				case ALLEGRO_KEY_2:
 					strcat_s(answr, 8, "2");
-					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
+					
 					pos_x += 3;
 					break;
 				case ALLEGRO_KEY_3:
 					strcat_s(answr, 8, "3");
-					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					pos_x += 3;
 					break;
 				case ALLEGRO_KEY_4:
 					strcat_s(answr, 8, "4");
-					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					pos_x += 3;
 					break;
 				case ALLEGRO_KEY_5:
 					strcat_s(answr, 8, "5");
-					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					pos_x += 3;
 					break;
 				case ALLEGRO_KEY_6:
 					strcat_s(answr, 8, "6");
-					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					pos_x += 3;
 					break;
 				case ALLEGRO_KEY_7:
 					strcat_s(answr, 8, "7");
-					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					pos_x += 3;
 					break;
 				case ALLEGRO_KEY_8:
 					strcat_s(answr, 8, "8");
-					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					pos_x += 3;
 					break;
 				case ALLEGRO_KEY_9:
 					strcat_s(answr, 8, "9");
-					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x = 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					pos_x += 3;
 					break;
 				case ALLEGRO_KEY_0:
 					strcat_s(answr, 8, "0");
-					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					pos_x += 3;
 					break;
 				}
@@ -396,7 +392,7 @@ int main() {
 				ativo = false;
 
 			}
-
+			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(teste, buffer, 10));
 			al_flip_display();
 		}
 

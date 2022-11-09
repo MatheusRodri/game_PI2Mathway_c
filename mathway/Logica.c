@@ -9,8 +9,8 @@ op:
 4 = /
 */
 
-int logica(char tipo, int nivel, int op, int n1, int n2, double resultado) {
-	if (tipo == "i") {
+int logica(int tipo, int nivel, int op, int n1, int n2, int resultado) {
+	if (tipo == 1) {
 		switch (op) {
 		case 1:
 			if (resultado == (n1 + n2)) {
