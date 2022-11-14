@@ -75,6 +75,40 @@ struct personagens {
 	ALLEGRO_BITMAP* perImage;
 };
 
+int calcularPosicaoC(float x)
+{
+	int posC = (int)x;	
+	float calcC = x / 32;
+	int restC = posC % 32;
+	int pos;
+
+	if (restC == 0)
+	{
+		return (int)calcC;
+	}
+	else
+	{
+		pos = ((int)calcC) + 1;
+	}
+}
+
+int calcularPosicaoL(float y)
+{
+	int posL = (int)y;
+	float calcL = y / 32;
+	int restL = posL % 32;
+	int pos;
+
+	if (restL == 0)
+	{
+		return (int)calcL;
+	}
+	else
+	{
+		pos = ((int)calcL) + 1;
+	}
+}
+
 
 void readTile() {
 
@@ -82,7 +116,7 @@ void readTile() {
 	{
 		for (int j = 0; j < colunas; j++)
 		{
-			for (int k = 0; k < 30; k++)
+			for (int k = 0; k < 40; k++)
 			{
 				if (c[i][j] == k)
 				{
@@ -132,10 +166,10 @@ int main() {
 	fTile[3] = al_load_bitmap("Tiles/tree2.bmp");
 	fTile[4] = al_load_bitmap("Tiles/tree3.bmp");
 	fTile[5] = al_load_bitmap("Tiles/tree4.bmp");
-	fTile[6] = al_load_bitmap("Tiles/water1.bmp");
-	fTile[7] = al_load_bitmap("Tiles/water2.bmp");
-	fTile[8] = al_load_bitmap("Tiles/water3.bmp");
-	fTile[9] = al_load_bitmap("Tiles/water4.bmp");
+	fTile[6] = al_load_bitmap("Tiles/path.bmp");
+	fTile[7] = al_load_bitmap("Tiles/pathU.bmp");
+	fTile[8] = al_load_bitmap("Tiles/LtoD.bmp");
+	fTile[9] = al_load_bitmap("Tiles/UtoD.bmp");
 	fTile[10] = al_load_bitmap("Tiles/P1.bmp");
 	fTile[11] = al_load_bitmap("Tiles/P2.bmp");
 	fTile[12] = al_load_bitmap("Tiles/P3.bmp");
@@ -150,6 +184,15 @@ int main() {
 	fTile[21] = al_load_bitmap("Tiles/dirtyDo.bmp");
 	fTile[22] = al_load_bitmap("Tiles/ArvoreE.bmp");
 	fTile[23] = al_load_bitmap("Tiles/ArvoreD.bmp");
+	fTile[24] = al_load_bitmap("Tiles/DtoR.bmp");
+	fTile[25] = al_load_bitmap("Tiles/UtoR.bmp");
+	fTile[26] = al_load_bitmap("Tiles/DtoL.bmp");
+	fTile[27] = al_load_bitmap("Tiles/T.bmp");
+	fTile[28] = al_load_bitmap("Tiles/TtoD.bmp");
+	fTile[29] = al_load_bitmap("Tiles/TtoU.bmp");
+	fTile[30] = al_load_bitmap("Tiles/flor.bmp");
+	fTile[31] = al_load_bitmap("Tiles/Arbust.bmp");
+
 
 	int teste = 10;
 	char buffer[sizeof(int) * 8 + 1];
@@ -212,6 +255,22 @@ int main() {
 	fscanf(mapa, "%i", &linhas);
 	fscanf(mapa, "%i", &colunas);
 
+	//colisão de tiles
+	//COLUNA X LINHA Y
+	bool colisaoB = false;
+	bool colisaoC = false;
+	bool colisaoD = false;
+	bool colisaoE = false;
+
+	bool contact = false;
+	int mapH = 32;
+	int mapW = 32;
+	int mapBX = mapW / 2;
+	int mapBy = mapH / 2;
+
+	
+	
+
 	for (int i = 0; i < linhas; i++)
 	{
 		for (int j = 0; j < colunas; j++)
@@ -229,6 +288,8 @@ int main() {
 	while (jogando)
 	{
 		
+
+		
 		while (!al_is_event_queue_empty(fila_eventos)) {
 			
 	
@@ -242,31 +303,211 @@ int main() {
 				ativo = true;
 				render = true;
 				bound = false;
-				if (al_key_down(&keyState, ALLEGRO_KEY_DOWN) && player.y < 850) {
 
-					player.y += movSpeed;
-					dir = BAIXO;
+				//pos Inicio = C10, L8	
+				int posAtC = calcularPosicaoC(player.x);
+				int posAtL = calcularPosicaoL(player.y);
+
+				//C=11 L=8
+
+				int posCTileD = posAtC + 1;
+				int posLTileD = posAtL;
+				int xTileD = (posAtC * 32) + 1; //posição atual do boneco *32 +1 sera o x do tile a direita 
+				int yTileD = (posAtL * 32);
+
+				//C=9 L=8
+
+				int posCTileE = posAtC - 1;
+				int posLTileE = posAtL;
+				int xTileE = (posCTileE * 32) - 31;
+				int yTileE = (posAtL * 32);
+
+				//C=10 L=9
+				int posCTileB = posAtC;
+				int posLTileB = posAtL + 1;
+				int xTileB = (posAtC * 32);
+				int yTileB = (posAtL * 32) + 1;
+
+				//C=10 L=7
+				int posCTileC = posAtC;
+				int posLTileC = posAtL - 1;
+				int xTileC = (posAtC * 32);
+				int yTileC = (posLTileC * 32) - 31;
+				
+
+
+				if (al_key_down(&keyState, ALLEGRO_KEY_DOWN) && player.y < 850 ) {
+
+
+				
+				
+						int oi = c[posLTileB][posCTileB];
+
+						if (oi == 2 ||oi== 3 || oi == 4 || oi == 5|| oi == 31 )
+						{
+							contact = true;
+							if (player.x + 32 > xTileB - mapBX &&
+								player.x<xTileB + mapBX &&
+								player.y + 32>yTileB - mapBy &&
+								player.y < yTileB + mapBy
+								
+								/*contact == true &&
+								player.y >= yTileB*/) {
+
+								colisaoB = true;
+							}
+						}
+						else {
+							colisaoB = false;
+						}
+
+			
+
+						if (colisaoB == false) {
+
+							player.y += movSpeed;
+							dir = BAIXO;
+						}
+						
 				}
 				else if (al_key_down(&keyState, ALLEGRO_KEY_UP) && player.y > 0) {
-					player.y -= movSpeed;
-					dir = CIMA;
+				
+
+					int yy = (int)player.y;
+					int resto = yy % 32;
+					float pos = player.y / 32;
+					int i = 0;
+					int coisa;
+
+					int xx = (int)player.x;
+					int resto1 = xx % 32;
+					float pos1 = player.x / 32;
+					int j = 0;
+					int coisa1;
+
+					if (resto == 0) {
+
+						i = (int)pos;
+					}
+					else if (resto > 0) {
+						coisa = (int)pos;
+						i = coisa + 1;
+					}
+
+
+					if (resto1 == 0) {
+
+						j = pos1;
+					}
+					else if (resto1 > 0) {
+						coisa1 = pos1;
+						j = 1 + coisa1;
+					}
+
+					if (c[i][j] == 0 || c[i][j] == 6 || c[i][j] == 7 || c[i][j] == 8 || c[i][j] == 9 || c[i][j] == 24 || c[i][j] == 25 || c[i][j] == 26 || c[i][j] == 27 || c[i][j] == 28 || c[i][j] == 29 || c[i][j] == 30 || player.x < 32)
+					{
+						player.y -= movSpeed;
+						dir = CIMA;
+
+					}
+
+					
 				}
 
 				else if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT) && player.x < 1370) {
-					player.x += movSpeed;
-					dir = DIREITA;
-				}
-				else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT) && player.x > 0) {
-					player.x -= movSpeed;
-					dir = ESQUERDA;
+					int j = 0;
+
+					int yy = (int)player.y;
+					int resto = yy % 32;
+					float pos = player.y / 32;
+					int i = 0;
+					int coisa;
+
+					int xx = (int)player.x;
+					int resto1 = xx % 32;
+					float pos1 = player.x / 32;
+
+
+
+					int coisa1;
+
+					if (resto == 0) {
+
+						i = (int)pos;
+					}
+					else if (resto > 0) {
+						coisa = (int)pos;
+						i = coisa + 1;
+					}
+
+
+					if (resto1 == 0) {
+
+						j = pos1;
+					}
+					else if (resto1 > 0) {
+						coisa1 = pos1;
+						j = 1 + coisa1;
+					}
+
+					if (((c[i + 1][j + 1] == 0 || c[i + 1][j + 1] == 6 || c[i + 1][j + 1] == 7 || c[i + 1][j + 1] == 8 || c[i + 1][j + 1] == 9 || c[i + 1][j + 1] == 24 || c[i + 1][j + 1] == 25 || c[i + 1][j + 1] == 26 || c[i + 1][j + 1] == 27 || c[i + 1][j + 1] == 28 || c[i + 1][j + 1] == 29 || c[i + 1][j + 1] == 30 )&& player.x < 1370)  || player.x < 32)
+					{
+
+						player.x += movSpeed;
+						dir = DIREITA;
+					}
 
 				}
+				else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT) && player.x > 0) {
+				int yy = (int)player.y;
+				int resto = yy % 32;
+				float pos = player.y / 32;
+				int j = 0;
+				int coisa;
+
+				int xx = (int)player.x;
+				int resto1 = xx % 32;
+				float pos1 = player.x / 32;
+				int i = 0;
+				int coisa1;
+
+				if (resto == 0) {
+
+					i = (int)pos;
+				}
+				else if (resto > 0) {
+					coisa = (int)pos;
+					i = coisa + 1;
+				}
+
+
+				if (resto1 == 0) {
+
+					j = pos1;
+				}
+				else if (resto1 > 0) {
+					coisa1 = pos1;
+					j = 1 + coisa1;
+				}
+
+				if ((c[i+1][j] == 0 || c[i + 1][j] == 6 || c[i + 1][j] == 7 || c[i + 1][j] == 8 || c[i + 1][j] == 9 || c[i + 1][j] == 24|| c[i + 1][j] == 25 || c[i + 1][j] == 26 || c[i + 1][j] == 27 || c[i + 1][j] == 28 || c[i + 1][j] == 29 || c[i + 1][j] == 30)  && player.x > 0)
+				{
+					player.x -= movSpeed;
+					dir = ESQUERDA;
+				}
+
+				}
+
+				
 
 				else if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
 					jogando = false;
 
 				}
 				else { ativo = false; }
+				
+					
+				
 
 				if (player.x + 64 > inimigo.x - inimigo.boundX &&
 					player.x<inimigo.x + inimigo.boundX &&
