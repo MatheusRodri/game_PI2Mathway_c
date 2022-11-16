@@ -468,7 +468,7 @@ int main() {
 						colisao = true;
 						bound = true;
 						ativo = false;
-						fase = faseUm;
+						
 					}
 					else
 						bound = false;
@@ -665,7 +665,7 @@ int main() {
 					al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255)); al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255));
 					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					int i;
-					sscanf(answr,"%d",&i);
+					scanf(answr,"%d",&i);
 					int resultado = logica(1,1,1,7,7,i);
 					if (resultado == 0) {
 						break;
