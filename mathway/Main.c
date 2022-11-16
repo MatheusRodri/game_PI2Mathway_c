@@ -30,8 +30,11 @@ FILE* mapa;
 
 int maps[];
 //nova movimentação
-
 enum direcao { BAIXO, ESQUERDA, DIREITA, CIMA };
+
+
+//enumeracao de fase
+enum fases { faseUm, faseDois, faseTres, faseQuatro, faseCinco };
 
 void gameOver() {
 
@@ -57,6 +60,8 @@ void caixaTexto(ALLEGRO_FONT* font) {
 	al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
 	al_flip_display();
 }
+
+
 //struct para inserir personagens na tela
 typedef struct personagens persona;
 struct personagens {
@@ -66,6 +71,7 @@ struct personagens {
 	float velY;
 	float dirX;
 	float dirY;
+
 	//proporções
 	int boundX;
 	int boundY;
@@ -143,6 +149,8 @@ int main() {
 	al_init_font_addon();
 
     bool done = false;
+
+
     //posiçao do texto
     int pos_x = 720;
 	int pos_y = 800;
@@ -225,7 +233,7 @@ int main() {
 
 	persona inimigo1;
 
-	inimigo1.x = 1000;
+	inimigo1.x = 100;
 	inimigo1.y = 600;
 	inimigo1.perImage = al_load_bitmap("sprites/inimigo.jpg");
 
@@ -235,12 +243,63 @@ int main() {
 	inimigo1.boundX = inimigo1.w / 2;
 	inimigo1.boundY = inimigo1.h / 2;
 
-	///////////////////////////////////
+	//inimigo 3
+
+	persona inimigo2;
+
+	inimigo2.x = 550;
+	inimigo2.y = 400;
+	inimigo2.perImage = al_load_bitmap("sprites/inimigo.jpg");
+
+	inimigo2.w = al_get_bitmap_width(inimigo2.perImage);
+	inimigo2.h = al_get_bitmap_height(inimigo2.perImage);
+
+	inimigo2.boundX = inimigo2.w / 2;
+	inimigo2.boundY = inimigo2.h / 2;
+
+	//inimigo 4
+
+	persona inimigo3;
+
+	inimigo3.x = 1200;
+	inimigo3.y = 500;
+	inimigo3.perImage = al_load_bitmap("sprites/inimigo.jpg");
+
+	inimigo3.w = al_get_bitmap_width(inimigo3.perImage);
+	inimigo3.h = al_get_bitmap_height(inimigo3.perImage);
+
+	inimigo3.boundX = inimigo3.w / 2;
+	inimigo3.boundY = inimigo3.h / 2;
+
+	//inimigo 5
+
+	persona inimigo4;
+
+	inimigo4.x = 800;
+	inimigo4.y = 750;
+	inimigo4.perImage = al_load_bitmap("sprites/inimigo.jpg");
+
+	inimigo4.w = al_get_bitmap_width(inimigo4.perImage);
+	inimigo4.h = al_get_bitmap_height(inimigo4.perImage);
+
+	inimigo4.boundX = inimigo4.w / 2;
+	inimigo4.boundY = inimigo4.h / 2;
+
+	
 	//alguns bool para identificar colisao
 
 	bool colisao = false;
 	bool bound = false;
+
+	//bools para cada fase fase = render + numero da fase
 	bool render = false;
+	bool render2 = false;
+	bool render3 = false;
+	bool render4 = false;
+	bool render5 = false;
+
+	//fase inicial
+	int fase = faseUm;
 
 
 	bool jogando = true;
@@ -301,7 +360,6 @@ int main() {
 			}
 			if (evento.type == ALLEGRO_EVENT_TIMER) {
 				ativo = true;
-				render = true;
 				bound = false;
 
 				//pos Inicio = C10, L8	
@@ -333,6 +391,90 @@ int main() {
 				int posLTileC = posAtL - 1;
 				int xTileC = (posAtC * 32);
 				int yTileC = (posLTileC * 32) - 31;
+
+
+				//fases
+
+				if (fase == faseUm) {
+					render = true;
+					if (player.x + 64 > inimigo.x - inimigo.boundX &&
+						player.x<inimigo.x + inimigo.boundX &&
+						player.y + 64>inimigo.y - inimigo.boundY &&
+						player.y < inimigo.y + inimigo.boundY) {
+
+						colisao = true;
+						bound = true;
+						ativo = false;
+						fase = faseDois;
+					}
+				}
+				if (fase == faseDois) {
+					render2 = true;
+					if (player.x + 64 > inimigo1.x - inimigo1.boundX &&
+						player.x<inimigo1.x + inimigo1.boundX &&
+						player.y + 64>inimigo1.y - inimigo1.boundY &&
+						player.y < inimigo1.y + inimigo1.boundY) {
+
+						colisao = true;
+						bound = true;
+						ativo = false;
+						fase = faseTres;
+					}
+					else
+						bound = false;
+						colisao = false;
+				}
+				if (fase == faseTres) {
+					render3 = true;
+					if (player.x + 64 > inimigo2.x - inimigo2.boundX &&
+						player.x<inimigo2.x + inimigo2.boundX &&
+						player.y + 64>inimigo2.y - inimigo2.boundY &&
+						player.y < inimigo2.y + inimigo2.boundY) {
+
+						colisao = true;
+						bound = true;
+						ativo = false;
+						fase = faseQuatro;
+					}
+					else
+						bound = false;
+						colisao = false;
+				}
+				if (fase == faseQuatro) {
+					render4 = true;
+					if (player.x + 64 > inimigo3.x - inimigo3.boundX &&
+						player.x<inimigo3.x + inimigo3.boundX &&
+						player.y + 64>inimigo3.y - inimigo3.boundY &&
+						player.y < inimigo3.y + inimigo3.boundY) {
+
+						colisao = true;
+						bound = true;
+						ativo = false;
+						fase = faseCinco;
+					}
+					else
+						bound = false;
+						colisao = false;
+				}
+
+				//
+				if (fase == faseCinco) {
+					render5 = true;
+					if (player.x + 64 > inimigo4.x - inimigo4.boundX &&
+						player.x<inimigo4.x + inimigo4.boundX &&
+						player.y + 64>inimigo4.y - inimigo4.boundY &&
+						player.y < inimigo4.y + inimigo4.boundY) {
+
+						colisao = true;
+						bound = true;
+						ativo = false;
+						fase = faseUm;
+					}
+					else
+						bound = false;
+					colisao = false;
+				}
+
 				
 
 
@@ -507,29 +649,6 @@ int main() {
 				else { ativo = false; }
 				
 					
-				
-
-				if (player.x + 64 > inimigo.x - inimigo.boundX &&
-					player.x<inimigo.x + inimigo.boundX &&
-					player.y + 64>inimigo.y - inimigo.boundY &&
-					player.y < inimigo.y + inimigo.boundY) {
-					colisao = true;
-
-					bound = true;
-					ativo = false;
-				}
-				else if (player.x + 64 > inimigo1.x - inimigo1.boundX &&
-					player.x<inimigo1.x + inimigo1.boundX &&
-					player.y + 64>inimigo1.y - inimigo1.boundY &&
-					player.y < inimigo1.y + inimigo1.boundY) {
-
-					bound = true;
-					ativo = false;
-				}
-				else
-					bound = false;
-				colisao = false;
-
 				if (ativo)
 					sourceX += al_get_bitmap_width(player.perImage) / 4.0;
 				else
@@ -557,6 +676,7 @@ int main() {
 					if (teste <= 0) {
 						gameOver();
 					}
+					
 
 					break;
 				case ALLEGRO_KEY_BACKSPACE:
@@ -614,12 +734,14 @@ int main() {
 
 		}
 		readTile();
-		if (render && al_is_event_queue_empty(fila_eventos)) {
+
+		//renderizacao personagem inimigo e caixa de texto
+		//render fase um
+		if (render) {
 			render = false;
 			//desenho
 			al_draw_bitmap_region(player.perImage, sourceX, sourceY * al_get_bitmap_height(player.perImage) / 4, 64, 64, player.x, player.y, NULL);
 			al_draw_bitmap(inimigo.perImage, inimigo.x - inimigo.boundX, inimigo.y - inimigo.boundY, 0);
-			al_draw_bitmap(inimigo1.perImage, inimigo1.x - inimigo1.boundX, inimigo1.y - inimigo1.boundY, 0);
 			if (bound) {
 					al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 					al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
@@ -631,11 +753,98 @@ int main() {
 			}
 			if (colisao) {
 				ativo = false;
-
 			}
 			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(teste, buffer, 10));
 			al_flip_display();
 		}
+		//render fase 2
+		if (render2) {
+			render2 = false;
+			//desenho
+			al_draw_bitmap_region(player.perImage, sourceX, sourceY * al_get_bitmap_height(player.perImage) / 4, 64, 64, player.x, player.y, NULL);
+			al_draw_bitmap(inimigo1.perImage, inimigo1.x - inimigo1.boundX, inimigo1.y - inimigo1.boundY, 0);
+			if (bound) {
+				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
+				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
+				al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
+
+				//al_flip_display(janela);
+
+			}
+			if (colisao) {
+				ativo = false;
+			}
+			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(teste, buffer, 10));
+			al_flip_display();
+		}
+
+		//render fase 3
+		if (render3) {
+			render3 = false;
+			//desenho
+			al_draw_bitmap_region(player.perImage, sourceX, sourceY * al_get_bitmap_height(player.perImage) / 4, 64, 64, player.x, player.y, NULL);
+			al_draw_bitmap(inimigo2.perImage, inimigo2.x - inimigo2.boundX, inimigo2.y - inimigo2.boundY, 0);
+			if (bound) {
+				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
+				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
+				al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
+
+				//al_flip_display(janela);
+
+			}
+			if (colisao) {
+				ativo = false;
+			}
+			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(teste, buffer, 10));
+			al_flip_display();
+		}
+
+		//render fase 4
+		if (render4) {
+			render4 = false;
+			//desenho
+			al_draw_bitmap_region(player.perImage, sourceX, sourceY * al_get_bitmap_height(player.perImage) / 4, 64, 64, player.x, player.y, NULL);
+			al_draw_bitmap(inimigo3.perImage, inimigo3.x - inimigo3.boundX, inimigo3.y - inimigo3.boundY, 0);
+			if (bound) {
+				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
+				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
+				al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
+
+				//al_flip_display(janela);
+
+			}
+			if (colisao) {
+				ativo = false;
+			}
+			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(teste, buffer, 10));
+			al_flip_display();
+		}
+		//render fase 5
+		if (render5) {
+			render5 = false;
+			//desenho
+			al_draw_bitmap_region(player.perImage, sourceX, sourceY * al_get_bitmap_height(player.perImage) / 4, 64, 64, player.x, player.y, NULL);
+			al_draw_bitmap(inimigo4.perImage, inimigo4.x - inimigo4.boundX, inimigo4.y - inimigo4.boundY, 0);
+			if (bound) {
+				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
+				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
+				al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
+
+				//al_flip_display(janela);
+
+			}
+			if (colisao) {
+				ativo = false;
+			}
+			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(teste, buffer, 10));
+			al_flip_display();
+		}
+
+
 
 	}
 	al_destroy_display(janela);
