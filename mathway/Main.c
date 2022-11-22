@@ -51,7 +51,19 @@ void gameOver() {
 	al_draw_bitmap(fundo, 0, 0, 0);
 
 	al_flip_display();
-
+	// fecha a tela de game over (dá interrupção)
+	/*
+	ALLEGRO_EVENT close;
+	ALLEGRO_EVENT_QUEUE *event = al_create_event_queue();
+	al_register_event_source(event, al_get_display_event_source(gmOv));
+	al_wait_for_event(event, &close);
+	while (gmOv != NULL) {
+		if (close.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+			al_destroy_bitmap(fundo);
+			atexit(0);
+			al_destroy_display(gmOv);  
+		}
+	}*/
 }
 
 void caixaTexto(ALLEGRO_FONT* font) {
@@ -113,6 +125,18 @@ int calcularPosicaoL(float y)
 	{
 		pos = ((int)calcL) + 1;
 	}
+}
+
+void telaInicial() {
+	//iniciando tela inicial
+	ALLEGRO_BITMAP* inScreen = al_load_bitmap("telainicial/inicio.png");
+	al_draw_bitmap(inScreen, 0, 0, 0);
+	
+
+}
+void fimTelaInicial(inScreen) {
+	
+	al_destroy_bitmap(inScreen);
 }
 
 
@@ -205,6 +229,7 @@ int main() {
 	int teste = 10;
 	char buffer[sizeof(int) * 8 + 1];
 
+	
 	//iniciando personagens 
 	persona player;
 	player.x = 320;
@@ -292,6 +317,7 @@ int main() {
 	bool bound = false;
 
 	//bools para cada fase fase = render + numero da fase
+	bool inicio = true;
 	bool render = false;
 	bool render2 = false;
 	bool render3 = false;
@@ -328,7 +354,6 @@ int main() {
 	int mapBy = mapH / 2;
 
 	
-	
 
 	for (int i = 0; i < linhas; i++)
 	{
@@ -343,11 +368,10 @@ int main() {
 	al_register_event_source(fila_eventos, al_get_timer_event_source(timer));
 	al_start_timer(timer);
 
+	
 
 	while (jogando)
 	{
-		
-
 		
 		while (!al_is_event_queue_empty(fila_eventos)) {
 			
@@ -683,7 +707,7 @@ int main() {
 					answr[strlen(answr) - 1] = '\0';
 					al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255)); al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255));
 					pos_x -= 3;
-					al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
+					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", quest);
 					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					pos_x += 3;
 					break;
@@ -733,7 +757,16 @@ int main() {
 			}
 
 		}
+		//desenha a tela inicial
+		if (inicio) {
+			inicio = false;
+			telaInicial();
+			//al_flip_display(janela);
+			al_rest(5);
+			fimTelaInicial();
+		}
 		readTile();
+		
 
 		//renderizacao personagem inimigo e caixa de texto
 		//render fase um
@@ -745,7 +778,7 @@ int main() {
 			if (bound) {
 					al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 					al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-					al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
+					al_draw_textf(font, al_map_rgb(0, 0, 0),pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", quest);
 					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 
 					//al_flip_display(janela);
@@ -766,7 +799,7 @@ int main() {
 			if (bound) {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-				al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", quest);
 				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 
 				//al_flip_display(janela);
@@ -788,7 +821,7 @@ int main() {
 			if (bound) {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-				al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", quest);
 				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 
 				//al_flip_display(janela);
@@ -810,7 +843,7 @@ int main() {
 			if (bound) {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-				al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", quest);
 				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 
 				//al_flip_display(janela);
@@ -831,7 +864,7 @@ int main() {
 			if (bound) {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-				al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", quest);
 				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 
 				//al_flip_display(janela);
@@ -844,13 +877,12 @@ int main() {
 			al_flip_display();
 		}
 
-
-
 	}
 	al_destroy_display(janela);
 	al_uninstall_keyboard();
 	al_uninstall_mouse();
 	al_destroy_bitmap(player.perImage);
+	
 
 	al_destroy_event_queue(fila_eventos);
 
