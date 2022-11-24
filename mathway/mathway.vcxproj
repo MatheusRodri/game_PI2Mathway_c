@@ -142,17 +142,9 @@
   <ItemGroup>
     <ClCompile Include="Logica.c" />
     <ClCompile Include="Main.c" />
-    <ClCompile Include="Movimentacao.c" />
-    <ClCompile Include="gerarSprites.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="headerGenSprite.h" />
-    <ClInclude Include="headerMovi.h" />
-    <ClCompile Include="Mapa.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Logica.h" />
-    <ClInclude Include="Mapa.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
