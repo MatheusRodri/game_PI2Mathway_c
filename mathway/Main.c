@@ -18,6 +18,7 @@
 const int larg = 1440;
 const int altu = 960;
 
+
 //variaveis de texto
 const char quest[] = "7+7";
 char answr[10];
@@ -66,12 +67,12 @@ void gameOver() {
 	}*/
 }
 
-void caixaTexto(ALLEGRO_FONT* font) {
-	al_draw_rectangle(50, 400, 750, 550, al_map_rgb(0, 0, 0), 3);
-	al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255));
-	al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
-	al_flip_display();
-}
+//void caixaTexto(ALLEGRO_FONT* font) {
+//	al_draw_rectangle(50, 400, 750, 550, al_map_rgb(0, 0, 0), 3);
+//	al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255));
+//	al_draw_textf(font, al_map_rgb(0, 0, 0), 400, 420, ALLEGRO_ALIGN_CENTER, "%s", quest);
+//	al_flip_display();
+//}
 
 
 //struct para inserir personagens na tela
@@ -134,8 +135,8 @@ void telaInicial() {
 	
 
 }
-void fimTelaInicial(inScreen) {
-	
+void fimTelaInicial() {
+	ALLEGRO_BITMAP* inScreen = al_load_bitmap("telainicial/inicio.png");
 	al_destroy_bitmap(inScreen);
 }
 
@@ -226,7 +227,8 @@ int main() {
 	fTile[31] = al_load_bitmap("Tiles/Arbust.bmp");
 
 
-	int teste = 10;
+	int vidaPersonagem = 20;
+	int faseAtual = 1;
 	char buffer[sizeof(int) * 8 + 1];
 
 	
@@ -328,8 +330,7 @@ int main() {
 	int fase = faseUm;
 
 
-	bool jogando = true;
-	bool running = true, draw = true, ativo = false;
+	bool jogando = true, running = true, draw = true, ativo = false;
 
 	float movSpeed = 5;
 	float dir = BAIXO;
@@ -496,7 +497,7 @@ int main() {
 					}
 					else
 						bound = false;
-					colisao = false;
+					    colisao = false;
 				}
 
 				
@@ -689,15 +690,18 @@ int main() {
 					al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255)); al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255));
 					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					int i;
-					scanf(answr,"%d",&i);
-					int resultado = logica(1,1,1,7,7,i);
+					sscanf(answr,"%d",&i);
+					
+					int resultado = logica(1,1,faseAtual,7,7,i);
+					
 					if (resultado == 0) {
+						faseAtual++;
 						break;
 					}
 					else {
-						teste = teste + resultado;
+						vidaPersonagem = vidaPersonagem + resultado;
 					}
-					if (teste <= 0) {
+					if (vidaPersonagem <= 0) {
 						gameOver();
 					}
 					
@@ -761,7 +765,7 @@ int main() {
 		if (inicio) {
 			inicio = false;
 			telaInicial();
-			//al_flip_display(janela);
+			al_flip_display(janela);
 			al_rest(5);
 			fimTelaInicial();
 		}
@@ -778,16 +782,18 @@ int main() {
 			if (bound) {
 					al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 					al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-					al_draw_textf(font, al_map_rgb(0, 0, 0),pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", quest);
+					al_draw_textf(font, al_map_rgb(0, 0, 0),pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", "11+10");
 					al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 
 					//al_flip_display(janela);
-				
+					
 			}
 			if (colisao) {
 				ativo = false;
 			}
-			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(teste, buffer, 10));
+			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(vidaPersonagem, buffer, 10));
+			al_draw_text(fonte, al_map_rgb(0, 0, 0), 1130, 20, ALLEGRO_ALIGN_CENTER, "Fase Atual");
+			al_draw_text(fonte, al_map_rgb(0, 0, 0), 1320, 20, ALLEGRO_ALIGN_CENTER, itoa(faseAtual, buffer, 10));
 			al_flip_display();
 		}
 		//render fase 2
@@ -799,7 +805,7 @@ int main() {
 			if (bound) {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", quest);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", "10-9");
 				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 
 				//al_flip_display(janela);
@@ -808,7 +814,9 @@ int main() {
 			if (colisao) {
 				ativo = false;
 			}
-			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(teste, buffer, 10));
+			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(vidaPersonagem, buffer, 10));
+			al_draw_text(fonte, al_map_rgb(0, 0, 0), 1130, 20, ALLEGRO_ALIGN_CENTER, "Fase Atual");
+			al_draw_text(fonte, al_map_rgb(0, 0, 0), 1320, 20, ALLEGRO_ALIGN_CENTER, itoa(faseAtual, buffer, 10));
 			al_flip_display();
 		}
 
@@ -821,7 +829,7 @@ int main() {
 			if (bound) {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", quest);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", "5*15");
 				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 
 				//al_flip_display(janela);
@@ -830,7 +838,9 @@ int main() {
 			if (colisao) {
 				ativo = false;
 			}
-			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(teste, buffer, 10));
+			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(vidaPersonagem, buffer, 10));
+			al_draw_text(fonte, al_map_rgb(0, 0, 0), 1130, 20, ALLEGRO_ALIGN_CENTER, "Fase Atual");
+			al_draw_text(fonte, al_map_rgb(0, 0, 0), 1320, 20, ALLEGRO_ALIGN_CENTER, itoa(faseAtual, buffer, 10));
 			al_flip_display();
 		}
 
@@ -843,7 +853,7 @@ int main() {
 			if (bound) {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", quest);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s","90/2");
 				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 
 				//al_flip_display(janela);
@@ -852,7 +862,9 @@ int main() {
 			if (colisao) {
 				ativo = false;
 			}
-			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(teste, buffer, 10));
+			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(vidaPersonagem, buffer, 10));
+			al_draw_text(fonte, al_map_rgb(0, 0, 0), 1130, 20, ALLEGRO_ALIGN_CENTER, "Fase Atual");
+			al_draw_text(fonte, al_map_rgb(0, 0, 0), 1320, 20, ALLEGRO_ALIGN_CENTER, itoa(faseAtual, buffer, 10));
 			al_flip_display();
 		}
 		//render fase 5
@@ -864,7 +876,7 @@ int main() {
 			if (bound) {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", quest);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x, pos_y, ALLEGRO_ALIGN_CENTER, "%s", "5^3");
 				al_draw_textf(font, al_map_rgb(0, 0, 0), pos_x + 20, pos_y, ALLEGRO_ALIGN_CENTER, "%s", answr);
 
 				//al_flip_display(janela);
@@ -873,7 +885,9 @@ int main() {
 			if (colisao) {
 				ativo = false;
 			}
-			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(teste, buffer, 10));
+			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(vidaPersonagem, buffer, 10));
+			al_draw_text(fonte, al_map_rgb(0, 0, 0), 1130, 20, ALLEGRO_ALIGN_CENTER, "Fase Atual");
+			al_draw_text(fonte, al_map_rgb(0, 0, 0), 1320, 20, ALLEGRO_ALIGN_CENTER, itoa(faseAtual, buffer, 10));
 			al_flip_display();
 		}
 

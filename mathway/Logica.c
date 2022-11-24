@@ -7,6 +7,7 @@ op:
 2 = -
 3 = *
 4 = /
+5 = potencia
 */
 
 int logica(int tipo, int nivel, int op, int n1, int n2, int resultado) {
@@ -35,6 +36,13 @@ int logica(int tipo, int nivel, int op, int n1, int n2, int resultado) {
 			}
 		case 4:
 			if (resultado == (n1 / n2)) {
+				return 0;
+			}
+			else {
+				return -5;
+			}
+		case 5:
+			if (resultado == (n1 * n1)) {
 				return 0;
 			}
 			else {
