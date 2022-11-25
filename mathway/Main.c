@@ -228,7 +228,7 @@ int main() {
 	persona inimigo;
 	inimigo.x = larguraTela / 2;
 	inimigo.y = alturaTela / 2;
-	inimigo.perImage = al_load_bitmap("sprites/inimigo.jpg");
+	inimigo.perImage = al_load_bitmap("sprites/inimigo2.png");
 	inimigo.w = al_get_bitmap_width(inimigo.perImage);
 	inimigo.h = al_get_bitmap_height(inimigo.perImage);
 	inimigo.boundX = inimigo.w / 2;
@@ -238,7 +238,7 @@ int main() {
 	persona inimigo1;
 	inimigo1.x = 100;
 	inimigo1.y = 600;
-	inimigo1.perImage = al_load_bitmap("sprites/inimigo.jpg");
+	inimigo1.perImage = al_load_bitmap("sprites/inimigo2.png");
 	inimigo1.w = al_get_bitmap_width(inimigo1.perImage);
 	inimigo1.h = al_get_bitmap_height(inimigo1.perImage);
 	inimigo1.boundX = inimigo1.w / 2;
@@ -248,7 +248,7 @@ int main() {
 	persona inimigo2;
 	inimigo2.x = 550;
 	inimigo2.y = 400;
-	inimigo2.perImage = al_load_bitmap("sprites/inimigo.jpg");
+	inimigo2.perImage = al_load_bitmap("sprites/inimigo2.png");
 	inimigo2.w = al_get_bitmap_width(inimigo2.perImage);
 	inimigo2.h = al_get_bitmap_height(inimigo2.perImage);
 	inimigo2.boundX = inimigo2.w / 2;
@@ -258,7 +258,7 @@ int main() {
 	persona inimigo3;
 	inimigo3.x = 1200;
 	inimigo3.y = 500;
-	inimigo3.perImage = al_load_bitmap("sprites/inimigo.jpg");
+	inimigo3.perImage = al_load_bitmap("sprites/inimigo2.png");
 	inimigo3.w = al_get_bitmap_width(inimigo3.perImage);
 	inimigo3.h = al_get_bitmap_height(inimigo3.perImage);
 	inimigo3.boundX = inimigo3.w / 2;
@@ -268,7 +268,7 @@ int main() {
 	persona inimigo4;
 	inimigo4.x = 800;
 	inimigo4.y = 750;
-	inimigo4.perImage = al_load_bitmap("sprites/inimigo.jpg");
+	inimigo4.perImage = al_load_bitmap("sprites/inimigo2.png");
 	inimigo4.w = al_get_bitmap_width(inimigo4.perImage);
 	inimigo4.h = al_get_bitmap_height(inimigo4.perImage);
 	inimigo4.boundX = inimigo4.w / 2;
