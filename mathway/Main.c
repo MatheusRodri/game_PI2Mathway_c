@@ -24,6 +24,7 @@ ALLEGRO_TIMER* timer;
 ALLEGRO_KEYBOARD_STATE keyState;
 ALLEGRO_DISPLAY* gmOv = NULL;
 ALLEGRO_BITMAP* fundo = NULL;
+ALLEGRO_BITMAP* vitoria = NULL;
 ALLEGRO_FONT* fonte;
 ALLEGRO_FONT* font;
 
@@ -58,17 +59,19 @@ struct personagens {
 };
 
 
-void gameOver() {
+bool gameOver() {
 	al_init();
 
 	al_init_image_addon();
 
-	gmOv = al_create_display(1440, 960);
+	
 	fundo = al_load_bitmap("Tiles/game.png");
 
-	al_draw_bitmap(fundo, 0, 0, 0);
+	al_draw_bitmap(fundo, 400, 150, 0);
 
 	al_flip_display();
+	al_rest(5);
+	return false;
 	// fecha a tela de game over (dá interrupção)
 	/*
 	ALLEGRO_EVENT close;
@@ -80,6 +83,35 @@ void gameOver() {
 			al_destroy_bitmap(fundo);
 			atexit(0);
 			al_destroy_display(gmOv);  
+		}
+	}*/
+}
+bool venceu() {
+	al_init();
+
+	al_init_image_addon();
+
+	
+	vitoria = al_load_bitmap("Tiles/win.png");
+
+	al_draw_bitmap(vitoria, 0, 150, 0);
+
+
+	al_flip_display();
+	al_rest(5);
+	return false;
+	
+	// fecha a tela de game over (dá interrupção)
+	/*
+	ALLEGRO_EVENT close;
+	ALLEGRO_EVENT_QUEUE *event = al_create_event_queue();
+	al_register_event_source(event, al_get_display_event_source(gmOv));
+	al_wait_for_event(event, &close);
+	while (gmOv != NULL) {
+		if (close.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+			al_destroy_bitmap(fundo);
+			atexit(0);
+			al_destroy_display(gmOv);
 		}
 	}*/
 }
@@ -568,7 +600,7 @@ int main() {
 				}
 
 				else if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
-					jogando = false;
+				jogando = false;
 				}
 				else { ativo = false; }
 				if (ativo)
@@ -636,10 +668,11 @@ int main() {
 						vidaPersonagem = vidaPersonagem + resultado;
 					}
 					if (faseAtual > 5) {
-						//A função da vitoria vem aqui
+						jogando = venceu;
 					}
 					if (vidaPersonagem <= 0) {
-						gameOver();
+						jogando = gameOver();
+						
 					}
 
 					break;
