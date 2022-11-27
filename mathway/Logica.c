@@ -41,7 +41,7 @@ int logica(int op, int n1, int n2, int resultado) {
 				return -5;
 			}
 		case 5:
-			if (resultado == (n1 * n1)) {
+			if (resultado == (n1 * n1 * n1)) {
 				return 0;
 			}
 			else {

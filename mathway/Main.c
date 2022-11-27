@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <locale.h>
+#include <string.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
@@ -38,6 +39,16 @@ int n1 = 0, n2 = 0, linhas, colunas, c[30][45],maps[];
 //Enumerações globais
 enum direcao { BAIXO, ESQUERDA, DIREITA, CIMA }; //Movimentção
 enum fases { faseUm, faseDois, faseTres, faseQuatro, faseCinco };//Fases
+
+
+void verificaInput() {
+	if (strlen(answr) == 0) {
+		return;
+	}
+	else if (strlen(answr) > 10) {
+		return;
+	}
+}
 
 //struct para inserir personagens na tela
 typedef struct personagens persona;
@@ -659,17 +670,16 @@ int main() {
 							fase = faseCinco;
 							break;
 						default:
-							break;
+							jogando = venceu();
 						}
+						memset(answr, 0, 10);
 						faseAtual++;
 						break;
 					}
 					else {
 						vidaPersonagem = vidaPersonagem + resultado;
 					}
-					if (faseAtual > 5) {
-						jogando = venceu;
-					}
+					
 					if (vidaPersonagem <= 0) {
 						jogando = gameOver();
 						
@@ -678,53 +688,114 @@ int main() {
 					break;
 				case ALLEGRO_KEY_BACKSPACE:
 					
-					answr[strlen(answr) - 1] = '\0';
+					if (strlen(answr) == 0) {
+						break;
+					}
+					else {
+						answr[strlen(answr) - 1] = '\0';
+					}
+					
 					
 					al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255)); al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255));
 					posTextoX -= 3;
 					al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", questaoInicial);
-					al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 20, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
+					al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 80, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					posTextoX += 3;
 					break;
 				case ALLEGRO_KEY_1:
+					
 					strcat_s(answr, 8, "1");
 					posTextoX += 3;
 					break;
 				case ALLEGRO_KEY_2:
-					strcat_s(answr, 8, "2");
-					posTextoX += 3;
+					if (strlen(answr) > 10) {
+						break;
+					}
+					else {
+						strcat_s(answr, 8, "2");
+						posTextoX += 3;
+					}
+					
 					break;
 				case ALLEGRO_KEY_3:
-					strcat_s(answr, 8, "3");
-					posTextoX += 3;
+					if (strlen(answr) > 10) {
+						break;
+					}
+					else {
+						strcat_s(answr, 8, "3");
+						posTextoX += 3;
+					}
+					
 					break;
 				case ALLEGRO_KEY_4:
-					strcat_s(answr, 8, "4");
-					posTextoX += 3;
+					if (strlen(answr) > 10) {
+						break;
+					}
+					else {
+						strcat_s(answr, 8, "4");
+						posTextoX += 3;
+					}
+					
 					break;
 				case ALLEGRO_KEY_5:
-					strcat_s(answr, 8, "5");
-					posTextoX += 3;
+					if (strlen(answr) > 10) {
+						break;
+					}
+					else {
+						strcat_s(answr, 8, "5");
+						posTextoX += 3;
+					}
+					
 					break;
 				case ALLEGRO_KEY_6:
-					strcat_s(answr, 8, "6");
-					posTextoX += 3;
+					if (strlen(answr) > 10) {
+						break;
+					}
+					else {
+						strcat_s(answr, 8, "6");
+						posTextoX += 3;
+					}
+					
 					break;
 				case ALLEGRO_KEY_7:
-					strcat_s(answr, 8, "7");
-					posTextoX += 3;
+					if (strlen(answr) > 10) {
+						break;
+					}
+					else {
+						strcat_s(answr, 8, "7");
+						posTextoX += 3;
+					}
+					
 					break;
 				case ALLEGRO_KEY_8:
-					strcat_s(answr, 8, "8");
-					posTextoX += 3;
+					if (strlen(answr) > 10) {
+						break;
+					}
+					else {
+						strcat_s(answr, 8, "8");
+						posTextoX += 3;
+					}
+					
 					break;
 				case ALLEGRO_KEY_9:
-					strcat_s(answr, 8, "9");
-					posTextoX += 3;
+					if (strlen(answr) > 10) {
+						break;
+					}
+					else {
+						strcat_s(answr, 8, "9");
+						posTextoX += 3;
+					}
+					
 					break;
 				case ALLEGRO_KEY_0:
-					strcat_s(answr, 8, "0");
-					posTextoX += 3;
+					if (strlen(answr) > 10) {
+						break;
+					}
+					else {
+						strcat_s(answr, 8, "0");
+						posTextoX += 3;
+					}
+					
 					break;
 				}
 			}
@@ -771,7 +842,7 @@ int main() {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
 				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", "10-9");
-				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 20, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 80, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
 			}
 			if (colisao) {
 				ativo = false;
@@ -791,7 +862,7 @@ int main() {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
 				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", "5*15");
-				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 20, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 80, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
 
 			}
 			if (colisao) {
@@ -812,7 +883,7 @@ int main() {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
 				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%s","90/2");
-				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 20, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 80, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
 			}
 			if (colisao) {
 				ativo = false;
@@ -831,7 +902,7 @@ int main() {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
 				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", "5^3");
-				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 20, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 80, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
 			}
 			if (colisao) {
 				ativo = false;
