@@ -4,6 +4,7 @@
 #include <limits.h>
 #include <locale.h>
 #include <string.h>
+#include <time.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
@@ -34,7 +35,9 @@ const int larguraTela = 1440;
 const int alturaTela = 960;
 const char questaoInicial[] = "7+7";
 char answr[10];
-int n1 = 0, n2 = 0, linhas, colunas, c[30][45],maps[];
+int n1 = 0, n2 = 0, linhas, colunas, c[30][45], maps[];
+
+
 
 //Enumerações globais
 enum direcao { BAIXO, ESQUERDA, DIREITA, CIMA }; //Movimentção
@@ -70,12 +73,14 @@ struct personagens {
 };
 
 
+
+
 bool gameOver() {
 	al_init();
 
 	al_init_image_addon();
 
-	
+
 	fundo = al_load_bitmap("Tiles/game.png");
 
 	al_draw_bitmap(fundo, 400, 150, 0);
@@ -93,7 +98,7 @@ bool gameOver() {
 		if (close.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			al_destroy_bitmap(fundo);
 			atexit(0);
-			al_destroy_display(gmOv);  
+			al_destroy_display(gmOv);
 		}
 	}*/
 }
@@ -102,7 +107,7 @@ bool venceu() {
 
 	al_init_image_addon();
 
-	
+
 	vitoria = al_load_bitmap("Tiles/win.png");
 
 	al_draw_bitmap(vitoria, 0, 150, 0);
@@ -111,7 +116,7 @@ bool venceu() {
 	al_flip_display();
 	al_rest(5);
 	return false;
-	
+
 	// fecha a tela de game over (dá interrupção)
 	/*
 	ALLEGRO_EVENT close;
@@ -131,7 +136,7 @@ bool venceu() {
 
 int calcularPosicaoC(float x)
 {
-	int posC = (int)x;	
+	int posC = (int)x;
 	float calcC = x / 32;
 	int restC = posC % 32;
 	int pos;
@@ -203,18 +208,22 @@ int main() {
 	al_init_font_addon();
 
 	//Decalrações de variaveis local
-    bool done = false;
-    int posTextoX = 720;
+	bool done = false;
+	int posTextoX = 720;
 	int posTextoY = 800;
 	int width;
 	int vidaPersonagem = 20;
 	int faseAtual = 1;
 	char buffer[sizeof(int) * 8 + 1];
 	//alguns bool para identificar colisao
-	bool colisao = false,bound = false;
+	bool colisao = false, bound = false;
 	//bools para cada fase fase = render + numero da fase
-	bool inicio = true, render = false, render2 = false,render3 = false,render4 = false,render5 = false;
+	bool inicio = true, render = false, render2 = false, render3 = false, render4 = false, render5 = false;
 
+
+
+
+	srand(time(NULL));
 	fonte = al_load_font("Fonts/ariblk.ttf", 50, NULL);
 	font = al_load_font("Fonts/ariblk.ttf", 30, NULL);
 	janela = al_create_display(larguraTela, alturaTela);
@@ -222,7 +231,7 @@ int main() {
 	al_register_event_source(fila_eventos, al_get_keyboard_event_source());
 	al_register_event_source(fila_eventos, al_get_display_event_source(janela));
 	width = al_get_display_width(janela);
-	
+
 
 	fTile[0] = al_load_bitmap("Tiles/grass.bmp");
 	fTile[1] = al_load_bitmap("Tiles/dirty.bmp");
@@ -311,7 +320,7 @@ int main() {
 	persona inimigo4;
 	inimigo4.x = 800;
 	inimigo4.y = 750;
-	inimigo4.perImage = al_load_bitmap("sprites/inimigo2.png");
+	inimigo4.perImage = al_load_bitmap("sprites/inimigo.jpg");
 	inimigo4.w = al_get_bitmap_width(inimigo4.perImage);
 	inimigo4.h = al_get_bitmap_height(inimigo4.perImage);
 	inimigo4.boundX = inimigo4.w / 2;
@@ -324,6 +333,9 @@ int main() {
 	float dir = BAIXO;
 	float sourceX = 0;
 	float sourceY = 0;
+
+	n1 = rand() % 100;
+	n2 = rand() % 100;
 
 	mapa = fopen("Mapa/mapa.txt", "r");
 	fscanf(mapa, "%i", &linhas);
@@ -407,7 +419,8 @@ int main() {
 						colisao = true;
 						bound = true;
 						ativo = false;
-						
+
+
 					}
 				}
 
@@ -421,10 +434,11 @@ int main() {
 						colisao = true;
 						bound = true;
 						ativo = false;
+
 					}
 					else
 						bound = false;
-						colisao = false;
+					colisao = false;
 				}
 
 				//Fase tres
@@ -440,7 +454,7 @@ int main() {
 					}
 					else
 						bound = false;
-						colisao = false;
+					colisao = false;
 				}
 
 				//Fase quadro
@@ -456,7 +470,7 @@ int main() {
 					}
 					else
 						bound = false;
-						colisao = false;
+					colisao = false;
 				}
 
 				//Fase cinco
@@ -470,38 +484,38 @@ int main() {
 						colisao = true;
 						bound = true;
 						ativo = false;
-						
+
 					}
 					else
 						bound = false;
-					    colisao = false;
+					colisao = false;
 				}
 
-				if (al_key_down(&keyState, ALLEGRO_KEY_DOWN) && player.y < 850 ) {
+				if (al_key_down(&keyState, ALLEGRO_KEY_DOWN) && player.y < 850) {
 
-						int oi = c[posLTileB][posCTileB];
+					int oi = c[posLTileB][posCTileB];
 
-						if (oi == 2 ||oi== 3 || oi == 4 || oi == 5|| oi == 31 )
+					if (oi == 2 || oi == 3 || oi == 4 || oi == 5 || oi == 31)
+					{
+						contact = true;
+						if (player.x + 32 > xTileB - mapBX &&
+							player.x<xTileB + mapBX &&
+							player.y + 32>yTileB - mapBy &&
+							player.y < yTileB + mapBy
+							)
 						{
-							contact = true;
-							if (player.x + 32 > xTileB - mapBX &&
-								player.x<xTileB + mapBX &&
-								player.y + 32>yTileB - mapBy &&
-								player.y < yTileB + mapBy
-								) 
-							{
-								colisaoB = true;
-							}
+							colisaoB = true;
 						}
-						else {
-							colisaoB = false;
-						}
+					}
+					else {
+						colisaoB = false;
+					}
 
-						if (colisaoB == false) {
-							player.y += movSpeed;
-							dir = BAIXO;
-						}
-						
+					if (colisaoB == false) {
+						player.y += movSpeed;
+						dir = BAIXO;
+					}
+
 				}
 				else if (al_key_down(&keyState, ALLEGRO_KEY_UP) && player.y > 0) {
 
@@ -567,7 +581,7 @@ int main() {
 						j = 1 + coisa1;
 					}
 
-					if (((c[i + 1][j + 1] == 0 || c[i + 1][j + 1] == 6 || c[i + 1][j + 1] == 7 || c[i + 1][j + 1] == 8 || c[i + 1][j + 1] == 9 || c[i + 1][j + 1] == 24 || c[i + 1][j + 1] == 25 || c[i + 1][j + 1] == 26 || c[i + 1][j + 1] == 27 || c[i + 1][j + 1] == 28 || c[i + 1][j + 1] == 29 || c[i + 1][j + 1] == 30 )&& player.x < 1370)  || player.x < 32)
+					if (((c[i + 1][j + 1] == 0 || c[i + 1][j + 1] == 6 || c[i + 1][j + 1] == 7 || c[i + 1][j + 1] == 8 || c[i + 1][j + 1] == 9 || c[i + 1][j + 1] == 24 || c[i + 1][j + 1] == 25 || c[i + 1][j + 1] == 26 || c[i + 1][j + 1] == 27 || c[i + 1][j + 1] == 28 || c[i + 1][j + 1] == 29 || c[i + 1][j + 1] == 30) && player.x < 1370) || player.x < 32)
 					{
 						player.x += movSpeed;
 						dir = DIREITA;
@@ -575,43 +589,43 @@ int main() {
 
 				}
 				else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT) && player.x > 0) {
-				int yy = (int)player.y;
-				int resto = yy % 32;
-				float pos = player.y / 32;
-				int j = 0;
-				int coisa;
-				int xx = (int)player.x;
-				int resto1 = xx % 32;
-				float pos1 = player.x / 32;
-				int i = 0;
-				int coisa1;
+					int yy = (int)player.y;
+					int resto = yy % 32;
+					float pos = player.y / 32;
+					int j = 0;
+					int coisa;
+					int xx = (int)player.x;
+					int resto1 = xx % 32;
+					float pos1 = player.x / 32;
+					int i = 0;
+					int coisa1;
 
-				if (resto == 0) {
-					i = (int)pos;
-				}
-				else if (resto > 0) {
-					coisa = (int)pos;
-					i = coisa + 1;
-				}
+					if (resto == 0) {
+						i = (int)pos;
+					}
+					else if (resto > 0) {
+						coisa = (int)pos;
+						i = coisa + 1;
+					}
 
-				if (resto1 == 0) {
-					j = pos1;
-				}
-				else if (resto1 > 0) {
-					coisa1 = pos1;
-					j = 1 + coisa1;
-				}
+					if (resto1 == 0) {
+						j = pos1;
+					}
+					else if (resto1 > 0) {
+						coisa1 = pos1;
+						j = 1 + coisa1;
+					}
 
-				if ((c[i+1][j] == 0 || c[i + 1][j] == 6 || c[i + 1][j] == 7 || c[i + 1][j] == 8 || c[i + 1][j] == 9 || c[i + 1][j] == 24|| c[i + 1][j] == 25 || c[i + 1][j] == 26 || c[i + 1][j] == 27 || c[i + 1][j] == 28 || c[i + 1][j] == 29 || c[i + 1][j] == 30)  && player.x > 0)
-				{
-					player.x -= movSpeed;
-					dir = ESQUERDA;
-				}
+					if ((c[i + 1][j] == 0 || c[i + 1][j] == 6 || c[i + 1][j] == 7 || c[i + 1][j] == 8 || c[i + 1][j] == 9 || c[i + 1][j] == 24 || c[i + 1][j] == 25 || c[i + 1][j] == 26 || c[i + 1][j] == 27 || c[i + 1][j] == 28 || c[i + 1][j] == 29 || c[i + 1][j] == 30) && player.x > 0)
+					{
+						player.x -= movSpeed;
+						dir = ESQUERDA;
+					}
 
 				}
 
 				else if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
-				jogando = false;
+					jogando = false;
 				}
 				else { ativo = false; }
 				if (ativo)
@@ -624,36 +638,38 @@ int main() {
 				draw = true;
 			}
 			if (evento.type == ALLEGRO_EVENT_KEY_DOWN) {
+
 				switch (evento.keyboard.keycode)
 				{
 				case ALLEGRO_KEY_ENTER:
+
 					al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255)); al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255));
 					al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
 					int i;
 					int resultado;
-					sscanf(answr,"%d",&i);
-				
+					sscanf(answr, "%d", &i);
+
 					switch (faseAtual)
 					{
 					case 1:
-						resultado = logica(faseAtual, 11, 10, i);
+						resultado = logica(faseAtual, n1, n2, i);
 						break;
 					case 2:
-						resultado = logica(faseAtual, 10, 9, i);
+						resultado = logica(faseAtual, n1, n2, i);
 						break;
 					case 3:
-						resultado = logica(faseAtual, 5, 15, i);
+						resultado = logica(faseAtual, n1, n2, i);
 						break;
 					case 4:
-						resultado = logica(faseAtual, 90, 2, i);
+						resultado = logica(faseAtual, n1, n2, i);
 						break;
 					case 5:
-						resultado = logica(faseAtual, 5, 3, i);
+						resultado = logica(faseAtual, n1, n2, i);
 						break;
 					default:
 						break;
 					}
-					
+
 					if (resultado == 0) {
 						switch (faseAtual)
 						{
@@ -673,29 +689,36 @@ int main() {
 							jogando = venceu();
 						}
 						memset(answr, 0, 10);
+
+						do {
+							n1 = rand() % 100;
+							n2 = rand() % 100;
+						} while (n2 > n1);
 						faseAtual++;
 						break;
 					}
 					else {
 						vidaPersonagem = vidaPersonagem + resultado;
 					}
-					
+
 					if (vidaPersonagem <= 0) {
 						jogando = gameOver();
-						
+
 					}
+
+
 
 					break;
 				case ALLEGRO_KEY_BACKSPACE:
-					
+
 					if (strlen(answr) == 0) {
 						break;
 					}
 					else {
 						answr[strlen(answr) - 1] = '\0';
 					}
-					
-					
+
+
 					al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255)); al_draw_filled_rectangle(50, 400, 750, 550, al_map_rgb(255, 255, 255));
 					posTextoX -= 3;
 					al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", questaoInicial);
@@ -703,7 +726,7 @@ int main() {
 					posTextoX += 3;
 					break;
 				case ALLEGRO_KEY_1:
-					
+
 					strcat_s(answr, 8, "1");
 					posTextoX += 3;
 					break;
@@ -715,7 +738,7 @@ int main() {
 						strcat_s(answr, 8, "2");
 						posTextoX += 3;
 					}
-					
+
 					break;
 				case ALLEGRO_KEY_3:
 					if (strlen(answr) > 10) {
@@ -725,7 +748,7 @@ int main() {
 						strcat_s(answr, 8, "3");
 						posTextoX += 3;
 					}
-					
+
 					break;
 				case ALLEGRO_KEY_4:
 					if (strlen(answr) > 10) {
@@ -735,7 +758,7 @@ int main() {
 						strcat_s(answr, 8, "4");
 						posTextoX += 3;
 					}
-					
+
 					break;
 				case ALLEGRO_KEY_5:
 					if (strlen(answr) > 10) {
@@ -745,7 +768,7 @@ int main() {
 						strcat_s(answr, 8, "5");
 						posTextoX += 3;
 					}
-					
+
 					break;
 				case ALLEGRO_KEY_6:
 					if (strlen(answr) > 10) {
@@ -755,7 +778,7 @@ int main() {
 						strcat_s(answr, 8, "6");
 						posTextoX += 3;
 					}
-					
+
 					break;
 				case ALLEGRO_KEY_7:
 					if (strlen(answr) > 10) {
@@ -765,7 +788,7 @@ int main() {
 						strcat_s(answr, 8, "7");
 						posTextoX += 3;
 					}
-					
+
 					break;
 				case ALLEGRO_KEY_8:
 					if (strlen(answr) > 10) {
@@ -775,7 +798,7 @@ int main() {
 						strcat_s(answr, 8, "8");
 						posTextoX += 3;
 					}
-					
+
 					break;
 				case ALLEGRO_KEY_9:
 					if (strlen(answr) > 10) {
@@ -785,7 +808,7 @@ int main() {
 						strcat_s(answr, 8, "9");
 						posTextoX += 3;
 					}
-					
+
 					break;
 				case ALLEGRO_KEY_0:
 					if (strlen(answr) > 10) {
@@ -795,7 +818,7 @@ int main() {
 						strcat_s(answr, 8, "0");
 						posTextoX += 3;
 					}
-					
+
 					break;
 				}
 			}
@@ -810,7 +833,7 @@ int main() {
 			fimTelaInicial();
 		}
 		readTile();
-		
+
 		//renderizacao personagem inimigo e caixa de texto
 		//render fase um
 		if (render) {
@@ -819,12 +842,13 @@ int main() {
 			al_draw_bitmap_region(player.perImage, sourceX, sourceY * al_get_bitmap_height(player.perImage) / 4, 64, 64, player.x, player.y, NULL);
 			al_draw_bitmap(inimigo.perImage, inimigo.x - inimigo.boundX, inimigo.y - inimigo.boundY, 0);
 			if (bound) {
-					al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
-					al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-					al_draw_textf(font, al_map_rgb(0, 0, 0),posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", "11+10");
-					al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 80, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);	
+				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
+				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%i + %i=", n1, n2);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 150, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
 			}
 			if (colisao) {
+
 				ativo = false;
 			}
 			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(vidaPersonagem, buffer, 10));
@@ -841,10 +865,11 @@ int main() {
 			if (bound) {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", "10-9");
-				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 80, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%i - %i=", n1, n2);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 150, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
 			}
 			if (colisao) {
+
 				ativo = false;
 			}
 			al_draw_text(fonte, al_map_rgb(255, 0, 0), 100, 20, ALLEGRO_ALIGN_CENTER, itoa(vidaPersonagem, buffer, 10));
@@ -861,8 +886,8 @@ int main() {
 			if (bound) {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", "5*15");
-				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 80, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%i * %i=", n1, n2);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 150, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
 
 			}
 			if (colisao) {
@@ -882,8 +907,9 @@ int main() {
 			if (bound) {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%s","90/2");
-				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 80, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%i / %i =", n1, n2);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 150, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY + 50, ALLEGRO_ALIGN_CENTER, "arendonda para baixo ", n1, n2);
 			}
 			if (colisao) {
 				ativo = false;
@@ -901,8 +927,8 @@ int main() {
 			if (bound) {
 				al_draw_rectangle(50, 760, 1390, 910, al_map_rgb(0, 0, 0), 3);
 				al_draw_filled_rectangle(50, 760, 1390, 910, al_map_rgb(255, 255, 255));
-				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", "5^3");
-				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 80, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX, posTextoY, ALLEGRO_ALIGN_CENTER, "%i ^3 + Raiz de 144", n1);
+				al_draw_textf(font, al_map_rgb(0, 0, 0), posTextoX + 200, posTextoY, ALLEGRO_ALIGN_CENTER, "%s", answr);
 			}
 			if (colisao) {
 				ativo = false;
